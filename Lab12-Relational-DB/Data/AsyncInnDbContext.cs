@@ -19,35 +19,75 @@ namespace Lab12_Relational_DB.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //ModelBuilder.Entity<Hotel>().HasData(
-            //    new Student
-            //    {
-            //        Id = 1,
-            //        FirstName = "Jane",
-            //        LastName = "Shepard",
-            //        Birthdate = new DateTime(1970, 3, 5)
-            //    },
-            //    new Student
-            //    {
-            //        Id = 2,
-            //        FirstName = "Kate",
-            //        LastName = "Austin",
-            //        Birthdate = new DateTime(1980, 11, 11)
-            //    }
-            //    );
+            modelBuilder.Entity<Hotel>().HasData(
+                new Hotel
+                {
+                    Id = 1,
+                    Name = "The Ballard Async Hotel",
+                    StreetAddress = "1234, Main St",
+                    City = "Denver",
+                    State = "CO",
+                    Phone = "(303) 389-3000"
+                },
+                new Hotel
+                {
+                    Id = 2,
+                    Name = "The Green Lake Async Hotel",
+                    StreetAddress = "1234, Main St",
+                    City = "Austin",
+                    State = "TX",
+                    Phone = "(512) 482-8000"
+                },
+                new Hotel
+                {
+                    Id = 3,
+                    Name = "The Wallingford Async Hotel",
+                    StreetAddress = "1234, Main St",
+                    City = "New York",
+                    State = "NY",
+                    Phone = "(212) 389-3000"
+                }
+                );
 
-            //ModelBuilder.Entity<Room>()HasData(
-            //    new Room
-            //    {
-            //        ID = 1, 
-            //        Price  = 100m,
-            //    }
-            //    new Room
-            //    {
-            //        ID = 1,
-            //        Price = 100m,
-            //    }
-            //    );
+            modelBuilder.Entity<Room>().HasData(
+                new Room
+                {
+                    Id = 1,
+                    Name = "Seattle Snooze",
+                    Layout = 0
+                },
+                new Room
+                {
+                    Id = 2,
+                    Name = "Fremont Fun",
+                    Layout = 1
+                },
+                new Room
+                {
+                    Id = 3,
+                    Name = "Georgetown Glow",
+                    Layout = 2
+                }
+                );
+
+            modelBuilder.Entity<Amenity>().HasData(
+                new Amenity
+                {
+                    Id = 1,
+                    Name = "TV"
+                },
+                new Amenity
+                {
+                    Id = 2,
+                    Name = "AC"
+                },
+                new Amenity
+                {
+                    Id = 3,
+                    Name = "Mini bar"
+                }
+                );
+
         }
 
         // to create an initial migration
