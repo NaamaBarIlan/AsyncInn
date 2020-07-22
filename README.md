@@ -41,7 +41,7 @@ Then select and open ```Lab12-Relational-DB.sln```
 
 ---
 
-### Entity Relationships Overview
+### Entity Relationship Overview
 
 * **Hotel** - has a 1:* relationship with HotelRoom, since a hotel has many rooms, but each room only belongs to one hotel. 
 * **HotelRoom** - in addition to the *:1 relationship with Hotel described above, has a *:1 relationship with Room, since there can be many hotel Rooms who have the same layout, but each room can only have one layout.
