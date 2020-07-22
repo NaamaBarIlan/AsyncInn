@@ -3,6 +3,7 @@
 ## Async Inn
 
 Lab12-Relational Databases
+Lab13 - Dependency Injection
 
 *Author: Na'ama Bar-Ilan*
 
@@ -49,7 +50,22 @@ Then select and open ```Lab12-Relational-DB.sln```
 * **RoomAmenities** -  in addition to the *:1 relationship with Room described above, has a *:1 relationship with Amenities, since each specific Amenity will only be included once in RoomAmenities and RoomAmenities can include many different amenities.  
 * **Amenity** - has a 1:* relationship with RoomAmenities described above. 
 
+---
+
+### Architecture
+
+The project architecture was refactored using a repository design pattern to allow and implement dependency injection.
+
+In the previous version of the application the controller was directly connected to the DBContext through _context. This dependency in the design pattern would prove to be problematic if another databased, with a different structure, needed to be added to the project later on. 
+
+In the redesign, two additional middle parts were added to the project: an interface and a service(repository). Now the controller does not directly access or depend on DBContext. It has access to all the relevant behaviors via the interface, while the repository implements the interface. 
+
+This added level of abstraction created loosely coupled components, and ensures that the controller does not depend on specific data, only the behaviors of a database. 
+
+
 
 ### Change Log
+
+1.1 *Refactored the project architecture to allow and implement dependency injection.* - 22 Jul 2020
 
 ------------------------------
