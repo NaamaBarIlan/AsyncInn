@@ -46,6 +46,7 @@ namespace Lab12_Relational_DB
             // MAPPING - register my Dependency Injection Services
             services.AddTransient<IHotel, HotelRepository>();
             services.AddTransient<IRoom, RoomRepository>();
+            services.AddTransient<IAmenity, AmenityRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
