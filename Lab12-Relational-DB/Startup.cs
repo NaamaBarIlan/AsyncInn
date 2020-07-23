@@ -30,6 +30,12 @@ namespace Lab12_Relational_DB
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+
+            //
+            services.AddControllers().AddNewtonsoftJson(options =>
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+                );
+
             // this is where all of our dependencies are going to live
             // Enable the use of using controllers within the MVC convention.
             services.AddControllers();

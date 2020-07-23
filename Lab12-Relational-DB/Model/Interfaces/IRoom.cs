@@ -22,5 +22,13 @@ namespace Lab12_Relational_DB.Model.Interfaces
 
         // Delete
         Task Delete(int id);
+
+        // Create: RoomAmenities method
+        Task AddAmenity(int roomId, int amenityId);
+
+        // Delete: Remove amenity from room method
+        Task RemoveAmenityFromRoom(int roomId, int amenityId);
     }
+
+   
 }

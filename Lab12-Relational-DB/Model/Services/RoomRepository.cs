@@ -57,5 +57,32 @@ namespace Lab12_Relational_DB.Model.Services
 
             return room;
         }
+
+        // Add a room and an amenity together
+
+        public async Task AddAmenity(int roomId, int amenityId)
+        {
+            RoomAmenities roomAmenities = new RoomAmenities()
+            {
+                RoomId = roomId,
+                AmenityId = amenityId
+            };
+
+            _context.Entry(roomAmenities).State = EntityState.Added;
+            await _context.SaveChangesAsync();
+
+        }
+        /// <summary>
+        /// Removes a specified amenity from a specific course
+        /// </summary>
+        /// <param name="roomId">Unique identifier of the room</param>
+        /// <param name="amenityId">Unique identifier of the amenity</param>
+        /// <returns></returns>
+        public async Task RemoveAmenityFromRoom(int roomId, int amenityId)
+        {
+            //look in the RoomAmenities table for the entry that matches the courseId and the studentId
+            var result = await _context.RoomAmenities.FirstOrDefaultAsync(X => X.RoomId == roomId && X.AmenityId == amenityId);
+
+        }
     }
 }
