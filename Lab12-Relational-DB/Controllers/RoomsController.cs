@@ -66,14 +66,13 @@ namespace Lab12_Relational_DB.Controllers
         }
 
         [HttpPost]
-        [Route("{roomId}/{AmenityId}")]
-        //POST: {roomId}/{AmenityId}
+        [Route("{roomId}/Amenity/{AmenityId}")]
+        //POST: {roomId}/Amenity/{AmenityId}
         // Model Binding
         public async Task<IActionResult> AddAmenityToRoom(int roomId, int amenityId)
         {
-            await _room.AddAmenity(roomId, amenityId);
+            await _room.AddAmenityToRoom(roomId, amenityId);
             return Ok();
-                
         }
 
         // DELETE: api/Rooms/5
@@ -86,7 +85,7 @@ namespace Lab12_Relational_DB.Controllers
 
         // DELETE An Amenity from room
         [HttpDelete]
-        [Route("{courseId}/{studentId}")]
+        [Route("{roomId}/Amenity/{amenityId}")]
         public async Task<IActionResult> RemoveAmenityFromRoom(int roomId, int amenityId)
         {
             await _room.RemoveAmenityFromRoom(roomId, amenityId);

@@ -37,13 +37,18 @@ namespace Lab12_Relational_DB.Model.Services
             await _context.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// Gets a specific room by Id, including all of the RoomAmenities that the room has
+        /// </summary>
+        /// <param name="id">Unique identifier of the room</param>
+        /// <returns>The list of all RoomAmenities in the specific room</returns>
         public async Task<Room> GetRoom(int id)
         {
             var room = await _context.Rooms.FindAsync(id);
 
             // include all of the RoomAmenities that the room has
             var roomAmenities = await _context.RoomAmenities.Where(x => x.AmenityId == id)
-                                                            .Include(x => x.Room)
+                                                            .Include(x => x.Amenity)
                                                             .ToListAsync();
 
             room.RoomAmenities = roomAmenities;
@@ -52,7 +57,8 @@ namespace Lab12_Relational_DB.Model.Services
 
         public async Task<List<Room>> GetRooms()
         {
-            var rooms = await _context.Rooms.ToListAsync();
+            var rooms = await _context.Rooms.Include(x => x.RoomAmenities)
+                                            .ToListAsync();
 
             return rooms;
         }
@@ -67,12 +73,12 @@ namespace Lab12_Relational_DB.Model.Services
 
 
         /// <summary>
-        /// Adds a room and an amenity together
+        /// Adds a specified amenity from a specific room
         /// </summary>
         /// <param name="roomId">Unique identifier of the room</param>
         /// <param name="amenityId">Unique identifier of the</param>
-        /// <returns></returns>
-        public async Task AddAmenity(int roomId, int amenityId)
+        /// <returns>Task of completion</returns>
+        public async Task AddAmenityToRoom(int roomId, int amenityId)
         {
             RoomAmenities roomAmenities = new RoomAmenities()
             {
@@ -84,17 +90,20 @@ namespace Lab12_Relational_DB.Model.Services
             await _context.SaveChangesAsync();
 
         }
+       
         /// <summary>
-        /// Removes a specified amenity from a specific course
+        /// Removes a specified amenity from a specific room
         /// </summary>
         /// <param name="roomId">Unique identifier of the room</param>
         /// <param name="amenityId">Unique identifier of the amenity</param>
-        /// <returns></returns>
+        /// <returns>Task of completion</returns>
         public async Task RemoveAmenityFromRoom(int roomId, int amenityId)
         {
             //look in the RoomAmenities table for the entry that matches the courseId and the studentId
             var result = await _context.RoomAmenities.FirstOrDefaultAsync(X => X.RoomId == roomId && X.AmenityId == amenityId);
-
+            _context.Entry(result).State = EntityState.Deleted;
+            await _context.SaveChangesAsync();
+           
         }
     }
 }
