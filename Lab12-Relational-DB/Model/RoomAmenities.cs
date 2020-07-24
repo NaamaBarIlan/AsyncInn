@@ -7,7 +7,7 @@ namespace Lab12_Relational_DB.Model
 {
     public class RoomAmenities
     {
-        // our composite key is both keys together combines
+        // our composite key is both keys together combined
         public int RoomId { get; set; }
 
         public int AmenityId { get; set; }

@@ -13,5 +13,8 @@ namespace Lab12_Relational_DB.Model
 
         public int Layout { get; set; }
 
+        // Nav property
+        public List<RoomAmenities> RoomAmenities { get; set; }
+
     }
 }

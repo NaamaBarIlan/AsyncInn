@@ -39,7 +39,14 @@ namespace Lab12_Relational_DB.Model.Services
 
         public async Task<Room> GetRoom(int id)
         {
-            Room room = await _context.Rooms.FindAsync(id);
+            var room = await _context.Rooms.FindAsync(id);
+
+            // include all of the RoomAmenities that the room has
+            var roomAmenities = await _context.RoomAmenities.Where(x => x.AmenityId == id)
+                                                            .Include(x => x.Room)
+                                                            .ToListAsync();
+
+            room.RoomAmenities = roomAmenities;
             return room;
         }
 
@@ -58,8 +65,13 @@ namespace Lab12_Relational_DB.Model.Services
             return room;
         }
 
-        // Add a room and an amenity together
 
+        /// <summary>
+        /// Adds a room and an amenity together
+        /// </summary>
+        /// <param name="roomId">Unique identifier of the room</param>
+        /// <param name="amenityId">Unique identifier of the</param>
+        /// <returns></returns>
         public async Task AddAmenity(int roomId, int amenityId)
         {
             RoomAmenities roomAmenities = new RoomAmenities()
