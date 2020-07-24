@@ -30,9 +30,18 @@ namespace Lab12_Relational_DB
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+
+            // This is where all of our dependencies are going to live.
+            // Enable the use of using controllers within the MVC convention
+            // Instal-Package Microsoft.AspNetCore.Mvc.NewtonsoftJson - Version 3.1.2
+            services.AddControllers().AddNewtonsoftJson(options =>
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+                );
+
             // this is where all of our dependencies are going to live
             // Enable the use of using controllers within the MVC convention.
-            services.AddControllers();
+            // The below was removed after adding NewtonsoftJson
+            //services.AddControllers();
 
             // Register with the app, that the DB exists, and what options to use for it. 
             services.AddDbContext<AsyncInnDbContext>(options =>

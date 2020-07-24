@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using Lab12_Relational_DB.Data;
 using Lab12_Relational_DB.Model;
 using Lab12_Relational_DB.Model.Interfaces;
+using System.Security.Cryptography.X509Certificates;
+using SQLitePCL;
 
 namespace Lab12_Relational_DB.Controllers
 {
@@ -63,6 +65,16 @@ namespace Lab12_Relational_DB.Controllers
             return CreatedAtAction("GetRoom", new { id = room.Id }, room);
         }
 
+        [HttpPost]
+        [Route("{roomId}/Amenity/{AmenityId}")]
+        //POST: {roomId}/Amenity/{AmenityId}
+        // Model Binding
+        public async Task<IActionResult> AddAmenityToRoom(int roomId, int amenityId)
+        {
+            await _room.AddAmenityToRoom(roomId, amenityId);
+            return Ok();
+        }
+
         // DELETE: api/Rooms/5
         [HttpDelete("{id}")]
         public async Task<ActionResult<Room>> DeleteRoom(int id)
@@ -70,6 +82,16 @@ namespace Lab12_Relational_DB.Controllers
             await _room.Delete(id);
             return NoContent();
         }
+
+        // DELETE An Amenity from room
+        [HttpDelete]
+        [Route("{roomId}/Amenity/{amenityId}")]
+        public async Task<IActionResult> RemoveAmenityFromRoom(int roomId, int amenityId)
+        {
+            await _room.RemoveAmenityFromRoom(roomId, amenityId);
+            return Ok();
+        }
+
 
     }
 }
