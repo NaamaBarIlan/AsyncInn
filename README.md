@@ -62,10 +62,23 @@ In the redesign, two additional middle parts were added to the project: an inter
 
 This added level of abstraction created loosely coupled components, and ensures that the controller does not depend on specific data, only the behaviors of a database. 
 
+----
+
+### API Routes
+
+* Rooms:
+    * GET: `api/Rooms`
+    * GET: `api/Rooms/{id}`
+    * PUT: `api/Rooms/{id}`
+    * POST: `api/Rooms`
+    * POST: `api/Rooms/{roomId}/Amenity/{AmenityId}`
+    * DELETE: `api/Rooms/{id}`
+    * DELETE: `api/Rooms/{roomId}/Amenity/{amenityId}`
 
 
 ### Change Log
 
+1.2 *Added RoomAmenities model and related API routes* - 23 Jul 2020
 1.1 *Refactored the project architecture to allow and implement dependency injection.* - 22 Jul 2020
 
 ------------------------------
