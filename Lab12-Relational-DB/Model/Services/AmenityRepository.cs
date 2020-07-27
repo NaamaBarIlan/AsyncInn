@@ -37,12 +37,18 @@ namespace Lab12_Relational_DB.Model.Services
         public async Task<List<Amenity>> GetAmenities()
         {
             var amenities = await _context.Amenities.ToListAsync();
+
+
+
             return amenities;
         }
 
         public async Task<Amenity> GetAmenity(int id)
         {
-            Amenity amenity = await _context.Amenities.FindAsync(id);
+            var amenity = await _context.Amenities.FindAsync(id);
+
+            //var amenities = await _context.Amenities.Where(x => x.)
+
             return amenity;
         }
 
