@@ -11,9 +11,9 @@ namespace Lab12_Relational_DB.Model
 
         public string Name { get; set; }
 
-        // add Nab Prop: RoomAmenities
+        // Nav Prop: RoomAmenities
 
-        public RoomAmenities RoomAmenities { get; set; }
+        public List<RoomAmenities> RoomAmenities { get; set; }
 
     }
 }

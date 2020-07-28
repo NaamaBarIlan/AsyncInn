@@ -60,6 +60,7 @@ namespace Lab12_Relational_DB.Model.Services
             var rooms = await _context.Rooms.Include(x => x.RoomAmenities)
                                             .ToListAsync();
 
+
             return rooms;
         }
 

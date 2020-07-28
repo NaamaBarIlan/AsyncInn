@@ -20,7 +20,7 @@ namespace Lab12_Relational_DB.Model.Services
 
         public async Task<Amenity> Create(Amenity amenity)
         {
-            _context.Entry(amenity).State = Microsoft.EntityFrameworkCore.EntityState.Added;
+            _context.Entry(amenity).State = EntityState.Added;
             await _context.SaveChangesAsync();
 
             return amenity;
@@ -30,15 +30,13 @@ namespace Lab12_Relational_DB.Model.Services
         {
             Amenity amenity = await GetAmenity(id);
 
-            _context.Entry(amenity).State = Microsoft.EntityFrameworkCore.EntityState.Deleted;
+            _context.Entry(amenity).State = EntityState.Deleted;
             await _context.SaveChangesAsync();
         }
 
         public async Task<List<Amenity>> GetAmenities()
         {
             var amenities = await _context.Amenities.ToListAsync();
-
-
 
             return amenities;
         }
@@ -47,8 +45,11 @@ namespace Lab12_Relational_DB.Model.Services
         {
             var amenity = await _context.Amenities.FindAsync(id);
 
-            //var amenities = await _context.Amenities.Where(x => x.)
+            var amenities = await _context.RoomAmenities.Where(x => x.AmenityId == id)
+                                                        .Include(x => x.Room)
+                                                        .ToListAsync();
 
+            amenity.RoomAmenities = amenities;
             return amenity;
         }
 
