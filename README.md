@@ -91,7 +91,7 @@ This added level of abstraction created loosely coupled components, and ensures 
 
 1.4 *Added DTOs to the application* - 27 Jul 2020
 
-1.3 *Added navigation properties and routing * - 27 Jul 2020
+1.3 *Added navigation properties and routing* - 27 Jul 2020
 
 1.2 *Added RoomAmenities model and related API routes* - 23 Jul 2020
 
