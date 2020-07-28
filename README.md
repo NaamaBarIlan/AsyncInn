@@ -5,6 +5,7 @@
 Lab12: Relational Databases
 Lab13: Dependency Injection
 Lab14: Navigation Properties & Routing
+Lab16: DTOs and Tests
 
 *Author: Na'ama Bar-Ilan*
 
@@ -77,7 +78,18 @@ This added level of abstraction created loosely coupled components, and ensures 
     * DELETE: `api/Rooms/{roomId}/Amenity/{amenityId}`
 
 
+### Data Transfer Objects (DTOs)
+
+* DTOs were implemented in this application in order to better control the data that was exposed to the client through the API. 
+
+* Specifically, DTOs were used to:
+    * Flatten object graphs that containe nested objects for client convenience and readability.  
+    * Hide any properties that should not be public, and avoid "over-posting".
+
+
 ### Change Log
+
+1.4 *Added DTOs to the application* - 27 Jul 2020
 
 1.3 *Added navigation properties and routing * - 27 Jul 2020
 
