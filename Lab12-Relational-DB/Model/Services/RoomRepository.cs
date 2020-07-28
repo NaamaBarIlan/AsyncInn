@@ -1,5 +1,7 @@
 ﻿using Lab12_Relational_DB.Data;
+using Lab12_Relational_DB.Model.DTOs;
 using Lab12_Relational_DB.Model.Interfaces;
+using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
 using SQLitePCL;
 using System;
@@ -9,31 +11,38 @@ using System.Threading.Tasks;
 
 namespace Lab12_Relational_DB.Model.Services
 {
-    public class RoomRepository : IRoom
+    public class RoomRepository : IRoomManager
     {
         private AsyncInnDbContext _context;
+        private IAmenityManager _amenities;
 
-        public RoomRepository(AsyncInnDbContext context)
+        public RoomRepository(AsyncInnDbContext context, IAmenityManager amenities)
         {
             _context = context;
+            _amenities = amenities;
         }
 
-        public async Task<Room> Create(Room room)
+        public async Task<RoomDTO> CreateRoom(RoomDTO dto)
         {
-            // when I have a room, I want to add them to the db:
-            _context.Entry(room).State = Microsoft.EntityFrameworkCore.EntityState.Added;
+            // convert a roomdto to a room entity
+            Enum.TryParse(dto.Layout, out Layout layout);
+            Room room = new Room()
+            {
+                Name = dto.Name,
+                Layout = layout
+            };
 
-            // the room gets 'saved' here, and then associated with an id. 
+            _context.Entry(room).State = EntityState.Added;
             await _context.SaveChangesAsync();
 
-            return room;
+            return dto;
         }
 
-        public async Task Delete(int id)
+        public async Task DeleteRoom(int id)
         {
-            Room room = await GetRoom(id);
+            var room = _context.Rooms.Find(id);
 
-            _context.Entry(room).State = Microsoft.EntityFrameworkCore.EntityState.Deleted;
+            _context.Entry(room).State = EntityState.Deleted;
             await _context.SaveChangesAsync();
         }
 
@@ -42,36 +51,56 @@ namespace Lab12_Relational_DB.Model.Services
         /// </summary>
         /// <param name="id">Unique identifier of the room</param>
         /// <returns>The list of all RoomAmenities in the specific room</returns>
-        public async Task<Room> GetRoom(int id)
+        public async Task<RoomDTO> GetRoom(int id)
         {
-            var room = await _context.Rooms.FindAsync(id);
-
             // include all of the RoomAmenities that the room has
-            var roomAmenities = await _context.RoomAmenities.Where(x => x.AmenityId == id)
-                                                            .Include(x => x.Amenity)
-                                                            .ToListAsync();
+            var room = await _context.Rooms.Where(x => x.ID == id)
+                                           .Include(x => x.RoomAmenity)
+                                           .FirstOrDefaultAsync();
 
-            room.RoomAmenities = roomAmenities;
-            return room;
+            RoomDTO dto = new RoomDTO
+            {
+                Name = room.Name,
+                Layout = room.Layout.ToString(),
+                ID = room.Id
+            };
+
+            dto.Amenities = new List<AmenityDTO>();
+            foreach (var item in room.RoomAmenities)
+            {
+                dto.Amenities.Add(await _amenities.GetAmenity(item.AmenitiesID));
+            }
+
+            return dto;
         }
 
-        public async Task<List<Room>> GetRooms()
+        public async Task<List<RoomDTO>> GetRooms()
         {
-            var rooms = await _context.Rooms.Include(x => x.RoomAmenities)
-                                            .ToListAsync();
+            var rooms = await _context.Rooms.ToListAsync();
+            List<RoomDTO> dtos = new List<RoomDTO>();
 
+            foreach (var room in rooms)
+            {
+                dtos.Add(await GetRoom(room.ID));
+            }
 
-            return rooms;
+            return dtos;
         }
 
-        public async Task<Room> Update(Room room)
+        public async Task UpdateRoom(RoomDTO dto)
         {
+            Enum.TryParse(dto.Layout, out Layout layout);
+
+            Room room = new Room()
+            {
+                Layout = layout,
+                Name = dto.Name,
+                Id = dto.ID,
+            };
+
             _context.Entry(room).State = EntityState.Modified;
             await _context.SaveChangesAsync();
-
-            return room;
         }
-
 
         /// <summary>
         /// Adds a specified amenity from a specific room
@@ -106,5 +135,6 @@ namespace Lab12_Relational_DB.Model.Services
             await _context.SaveChangesAsync();
            
         }
+
     }
 }
