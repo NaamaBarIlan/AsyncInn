@@ -19,5 +19,7 @@ namespace Lab12_Relational_DB.Model
 
         public string Phone { get; set; }
 
+        public List<HotelRoom> HotelRooms { get; set; }
+
     }
 }

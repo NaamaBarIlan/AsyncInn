@@ -5,20 +5,22 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace Lab12_Relational_DB.Data
 {
-    public class AsyncInnDbContext : DbContext
+    public class AsyncInnDbContext : IdentityDbContext<ApplicationUser>
     {
         // adding a constructor, so when we make an instance of the DB it will have the right options
         // we'll always leave this constructor empty. 
         public AsyncInnDbContext(DbContextOptions<AsyncInnDbContext> options) : base(options)
         {
-
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            //need to get the original behavior for our model override
+            base.OnModelCreating(modelBuilder);
             //This tells the db that the join tables have a combination composite key of AmenityId and RoomId:
             modelBuilder.Entity<RoomAmenities>().HasKey(x => new {x.AmenityId, x.RoomId });
 

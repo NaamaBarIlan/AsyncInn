@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Lab12_Relational_DB.Data;
+using Lab12_Relational_DB.Model;
 using Lab12_Relational_DB.Model.Interfaces;
 using Lab12_Relational_DB.Model.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -51,6 +53,11 @@ namespace Lab12_Relational_DB
                 // Connection string contains the location, username, pw of your sql server... with our sql database directly.
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
+
+            //Register IDENTITY
+            services.AddIdentity<ApplicationUser, IdentityRole>()
+                    .AddEntityFrameworkStores<AsyncInnDbContext>()
+                    .AddDefaultTokenProviders();
 
             // MAPPING - register my Dependency Injection Services
             services.AddTransient<IHotel, HotelRepository>();

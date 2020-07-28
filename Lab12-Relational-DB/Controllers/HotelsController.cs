@@ -26,6 +26,7 @@ namespace Lab12_Relational_DB.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Hotel>>> GetHotels()
         {
+            
             return await _hotel.GetHotels();
         }
 

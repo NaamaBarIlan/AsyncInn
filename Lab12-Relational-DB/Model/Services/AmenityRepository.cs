@@ -36,7 +36,9 @@ namespace Lab12_Relational_DB.Model.Services
 
         public async Task<List<Amenity>> GetAmenities()
         {
-            var amenities = await _context.Amenities.ToListAsync();
+            var amenities = await _context.Amenities.Include(a => a.RoomAmenities)
+                                                    .ThenInclude(ra => ra.Room)
+                                                    .ToListAsync();
 
             return amenities;
         }
