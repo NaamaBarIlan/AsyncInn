@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Lab12_Relational_DB.Model.DTOs;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,17 +9,17 @@ namespace Lab12_Relational_DB.Model.Interfaces
     public interface IAmenity
     {
         // Create
-        Task<Amenity> Create(Amenity amenity);
+        Task<AmenityDTO> Create(AmenityDTO amenityDto);
 
         // Read
         // Get ALL
-        Task<List<Amenity>> GetAmenities();
+        Task<List<AmenityDTO>> GetAmenities();
 
         // Get individually (by id)
-        Task<Amenity> GetAmenity(int id);
+        Task<AmenityDTO> GetAmenity(int id);
 
         // Update
-        Task<Amenity> Update(Amenity amenity);
+        Task<AmenityDTO> Update(AmenityDTO amenityDto);
 
         // Delete
         Task Delete(int id);

@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Lab12_Relational_DB.Data;
 using Lab12_Relational_DB.Model;
 using Lab12_Relational_DB.Model.Interfaces;
+using Lab12_Relational_DB.Model.DTOs;
 
 namespace Lab12_Relational_DB.Controllers
 {
@@ -24,31 +25,31 @@ namespace Lab12_Relational_DB.Controllers
 
         // GET: api/Amenities
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Amenity>>> GetAmenities()
+        public async Task<ActionResult<IEnumerable<AmenityDTO>>> GetAmenities()
         {
             return await _amenity.GetAmenities();
         }
 
         // GET: api/Amenities/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Amenity>> GetAmenity(int id)
+        public async Task<ActionResult<AmenityDTO>> GetAmenity(int id)
         {
-            Amenity amenity = await _amenity.GetAmenity(id);
+            AmenityDTO amenityDto = await _amenity.GetAmenity(id);
 
-            return amenity;
+            return amenityDto;
         }
 
         // PUT: api/Amenities/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutAmenity(int id, Amenity amenity)
+        public async Task<IActionResult> PutAmenity(int id, AmenityDTO amenityDto)
         {
-            if (id != amenity.Id)
+            if (id != amenityDto.ID)
             {
                 return BadRequest();
             }
-            var updatedAmenity = await _amenity.Update(amenity);
+            var updatedAmenity = await _amenity.Update(amenityDto);
 
             return Ok(updatedAmenity);
         }
@@ -57,10 +58,10 @@ namespace Lab12_Relational_DB.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<Amenity>> PostAmenity(Amenity amenity)
+        public async Task<ActionResult<AmenityDTO>> PostAmenity(AmenityDTO amenityDto)
         {
-            await _amenity.Create(amenity);
-            return CreatedAtAction("GetAmenity", new { id = amenity.Id }, amenity);
+            await _amenity.Create(amenityDto);
+            return CreatedAtAction("GetAmenity", new { id = amenityDto.ID }, amenityDto);
         }
 
         // DELETE: api/Amenities/5
