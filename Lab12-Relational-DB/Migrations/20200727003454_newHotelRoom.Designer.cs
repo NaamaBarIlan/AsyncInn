@@ -3,14 +3,16 @@ using Lab12_Relational_DB.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Lab12_Relational_DB.Migrations
 {
     [DbContext(typeof(AsyncInnDbContext))]
-    partial class AsyncInnDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200727003454_newHotelRoom")]
+    partial class newHotelRoom
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -125,8 +127,7 @@ namespace Lab12_Relational_DB.Migrations
 
                     b.HasKey("HotelId", "RoomNumber");
 
-                    b.HasIndex("RoomId")
-                        .IsUnique();
+                    b.HasIndex("RoomId");
 
                     b.ToTable("HotelRoom");
                 });
@@ -179,9 +180,6 @@ namespace Lab12_Relational_DB.Migrations
 
                     b.HasKey("AmenityId", "RoomId");
 
-                    b.HasIndex("AmenityId")
-                        .IsUnique();
-
                     b.HasIndex("RoomId");
 
                     b.ToTable("RoomAmenities");
@@ -196,8 +194,8 @@ namespace Lab12_Relational_DB.Migrations
                         .IsRequired();
 
                     b.HasOne("Lab12_Relational_DB.Model.Room", "Room")
-                        .WithOne("HotelRoom")
-                        .HasForeignKey("Lab12_Relational_DB.Model.HotelRoom", "RoomId")
+                        .WithMany()
+                        .HasForeignKey("RoomId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -205,8 +203,8 @@ namespace Lab12_Relational_DB.Migrations
             modelBuilder.Entity("Lab12_Relational_DB.Model.RoomAmenities", b =>
                 {
                     b.HasOne("Lab12_Relational_DB.Model.Amenity", "Amenity")
-                        .WithOne("RoomAmenities")
-                        .HasForeignKey("Lab12_Relational_DB.Model.RoomAmenities", "AmenityId")
+                        .WithMany()
+                        .HasForeignKey("AmenityId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

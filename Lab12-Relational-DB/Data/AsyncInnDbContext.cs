@@ -19,6 +19,7 @@ namespace Lab12_Relational_DB.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            //This tells the db that the join tables have a combination composite key of AmenityId and RoomId:
             modelBuilder.Entity<RoomAmenities>().HasKey(x => new {x.AmenityId, x.RoomId });
 
             modelBuilder.Entity<HotelRoom>().HasKey(x => new { x.HotelId, x.RoomNumber });
@@ -106,7 +107,7 @@ namespace Lab12_Relational_DB.Data
 
         public DbSet<RoomAmenities> RoomAmenities { get; set; }
 
-        public DbSet<HotelRoom> HotelRooms { get; set; }
+        public DbSet<HotelRoom> HotelRoom { get; set; }
 
     }
 }

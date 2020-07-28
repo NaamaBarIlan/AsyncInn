@@ -16,5 +16,7 @@ namespace Lab12_Relational_DB.Model
         // Nav property
         public List<RoomAmenities> RoomAmenities { get; set; }
 
+        public HotelRoom HotelRoom { get; set; }
+
     }
 }

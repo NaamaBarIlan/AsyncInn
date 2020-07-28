@@ -10,14 +10,13 @@ namespace Lab12_Relational_DB.Model
         // our composite key is both keys together combines
         public int HotelId { get; set; }
 
-        public int RoomNumber { get; set; }
-
         public int RoomId { get; set; }
+
+        public int RoomNumber { get; set; }
 
         public Decimal Rate { get; set; }
 
         public bool PetFriendly { get; set; }
-
 
         // Navigation property
 
