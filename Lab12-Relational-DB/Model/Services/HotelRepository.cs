@@ -24,7 +24,7 @@ namespace Lab12_Relational_DB.Model.Services
             // old way:
             //_context.Hotels.Add(hotel);
             // new way:
-            _context.Entry(hotel).State = Microsoft.EntityFrameworkCore.EntityState.Added;
+            _context.Entry(hotel).State = EntityState.Added;
 
             //tell our DB to save changes Async:
             // the hotel gets 'saved' here, and then associated with an id 
@@ -38,7 +38,7 @@ namespace Lab12_Relational_DB.Model.Services
         {
             Hotel hotel = await GetHotel(id);
 
-            _context.Entry(hotel).State = Microsoft.EntityFrameworkCore.EntityState.Deleted;
+            _context.Entry(hotel).State = EntityState.Deleted;
             await _context.SaveChangesAsync();
         }
 
@@ -46,14 +46,23 @@ namespace Lab12_Relational_DB.Model.Services
         {
             // Look in the DB on the Hotel table, 
             // where the id is equal to the id that was brought in as an argument
-            Hotel hotel = await _context.Hotels.FindAsync(id);
+            var hotel = await _context.Hotels.Where(h => h.Id == id)
+                                             .Include(h => h.HotelRooms)
+                                             .ThenInclude(hr => hr.Room)
+                                             .ThenInclude(r => r.RoomAmenities)
+                                             .ThenInclude(ra => ra.Amenity)
+                                             .FirstOrDefaultAsync();
 
             return hotel;
         }
 
         public async Task<List<Hotel>> GetHotels()
         {
-            var hotels = await _context.Hotels.ToListAsync();
+            var hotels = await _context.Hotels.Include(h => h.HotelRooms)
+                                              .ThenInclude(hr => hr.Room)
+                                              .ThenInclude(r => r.RoomAmenities)
+                                              .ThenInclude(ra => ra.Amenity)
+                                              .ToListAsync();
 
             return hotels;
         }

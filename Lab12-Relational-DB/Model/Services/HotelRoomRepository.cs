@@ -26,7 +26,7 @@ namespace Lab12_Relational_DB.Model.Services
             return hotelRoom;
         }
 
-        public async Task Delete(int roomNumber, int hotelId)
+        public async Task Delete(int hotelId, int roomNumber)
         {
             var hotelRoom = await GetSingleHotelRoom(roomNumber, hotelId);
             _context.Entry(hotelRoom).State = EntityState.Deleted;
@@ -42,7 +42,7 @@ namespace Lab12_Relational_DB.Model.Services
             return hotelRooms;
         }
 
-        public async Task<HotelRoom> GetSingleHotelRoom(int roomNumber, int hotelId)
+        public async Task<HotelRoom> GetSingleHotelRoom(int hotelId, int roomNumber)
         {
             // Add LINQ
             //var hotelRoom = await _context.HotelRooms.FindAsync(hotelId, roomNumber);

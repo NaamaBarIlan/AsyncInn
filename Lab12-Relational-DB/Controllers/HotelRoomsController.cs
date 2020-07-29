@@ -30,11 +30,11 @@ namespace Lab12_Relational_DB.Controllers
         }
 
 
-        // GET: api/HotelRooms/5
+        // GET: api/Hotels/5/Rooms/{roomNumber}
         [HttpGet("/api/Hotels/{hotelId}/Rooms/{roomNumber}")]
-        public async Task<ActionResult<HotelRoom>> GetSingleHotelRoom(int roomNumber, int hotelId)
+        public async Task<ActionResult<HotelRoom>> GetSingleHotelRoom(int hotelId, int roomNumber)
         {
-            var hotelRoom = await _hotelRoom.GetSingleHotelRoom(roomNumber, hotelId);
+            var hotelRoom = await _hotelRoom.GetSingleHotelRoom(hotelId, roomNumber);
 
             if (hotelRoom == null)
             {
@@ -74,7 +74,7 @@ namespace Lab12_Relational_DB.Controllers
 
         // DELETE: api/HotelRooms/5
         [HttpDelete("/api/Hotels/{hotelId}/Rooms/{roomNumber}")]
-        public async Task<ActionResult<HotelRoom>> DeleteHotelRoom(int roomNumber, int hotelId)
+        public async Task<ActionResult<HotelRoom>> DeleteHotelRoom(int hotelId, int roomNumber)
         {
             await _hotelRoom.Delete(roomNumber, hotelId);
 

@@ -12,11 +12,11 @@ namespace Lab12_Relational_DB.Model.Interfaces
 
         Task Update(HotelRoom hotelroom);
 
-        Task Delete(int roomNumber, int hotelId);
+        Task Delete(int hotelId, int roomNumber);
 
         Task<List<HotelRoom>> GetHotelRooms(int hotelId);
 
-        Task<HotelRoom> GetSingleHotelRoom(int roomNumber, int hotelId);
+        Task<HotelRoom> GetSingleHotelRoom(int hotelId, int roomNumber);
 
     }
 }
