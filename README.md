@@ -6,12 +6,14 @@ Lab12: Relational Databases
 Lab13: Dependency Injection
 Lab14: Navigation Properties & Routing
 Lab16: DTOs and Tests
+Lab17: Identity
+
 
 *Author: Na'ama Bar-Ilan*
 
 ----
 
-## Description
+### Description
 
 This is a C# console web application. It builds out a relational database and an API server for a Hotel Asset Management system, based on client requirements.
 
@@ -85,6 +87,15 @@ This added level of abstraction created loosely coupled components, and ensures 
 * Specifically, DTOs were used to:
     * Flatten object graphs that containe nested objects for client convenience and readability.  
     * Hide any properties that should not be public, and avoid "over-posting".
+
+
+### Identity
+
+* ASP.NET Core Identity is an API that supports user interface login functionality. It manages users, passwords, profile data, roles, claims, tokens, email confirmation, and more.
+
+* Users can create an account with the login information stored in Identity or they can use an external login provider. Supported external login providers include Facebook, Google, Microsoft Account, and Twitter.
+
+* Identity is typically configured using a SQL Server database to store user names, passwords, and profile data. Alternatively, another persistent store can be used, for example, Azure Table Storage.
 
 
 ### Change Log
