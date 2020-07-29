@@ -2,14 +2,15 @@
 
 ## Async Inn
 
-Lab12: Relational Databases
-Lab13: Dependency Injection
-Lab14: Navigation Properties & Routing
-Lab16: DTOs and Tests
-Lab17: Identity
-
-
 *Author: Na'ama Bar-Ilan*
+
+----
+
+* Lab12: Relational Databases
+* Lab13: Dependency Injection
+* Lab14: Navigation Properties & Routing
+* Lab16: DTOs and Tests
+* Lab17: Identity
 
 ----
 
@@ -100,12 +101,14 @@ This added level of abstraction created loosely coupled components, and ensures 
 
 ### Change Log
 
+1.5 *Added identity: user registration and user login* - 28 Jul 2020
+
 1.4 *Added DTOs to the application* - 27 Jul 2020
 
 1.3 *Added navigation properties and routing* - 27 Jul 2020
 
 1.2 *Added RoomAmenities model and related API routes* - 23 Jul 2020
 
-1.1 *Refactored the project architecture to allow and implement dependency injection.* - 22 Jul 2020
+1.1 *Refactored the project architecture to allow and implement dependency injection* - 22 Jul 2020
 
 ------------------------------
