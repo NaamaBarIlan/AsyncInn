@@ -10,10 +10,13 @@ using Lab12_Relational_DB.Model;
 using Lab12_Relational_DB.Model.Interfaces;
 using System.Security.Cryptography.X509Certificates;
 using SQLitePCL;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Lab12_Relational_DB.Controllers
 {
+    
     [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
     public class RoomsController : ControllerBase
     {
@@ -26,6 +29,7 @@ namespace Lab12_Relational_DB.Controllers
 
         // GET: api/Rooms
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<Room>>> GetRooms()
         {
             return await _room.GetRooms();
