@@ -15,5 +15,7 @@ namespace Lab12_Relational_DB.Model.DTOs
 
         public string Password { get; set; }
 
+        public string Role { get; set; }
+
     }
 }

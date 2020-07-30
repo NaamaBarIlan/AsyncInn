@@ -23,6 +23,8 @@ namespace Lab12_Relational_DB.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
+    // This Authorize tag makes the Whole contro
+    [Authorize]
     public class AccountController : ControllerBase
     {
         private UserManager<ApplicationUser> _userManager;
@@ -45,6 +47,7 @@ namespace Lab12_Relational_DB.Controllers
         /// <returns>Task result: either an Ok or a BadRequest message</returns>
         // api/account/register
         [HttpPost, Route("register")]
+
         public async Task<IActionResult> Register(RegisterDTO register)
         {   
             ApplicationUser user = new ApplicationUser()
@@ -60,10 +63,7 @@ namespace Lab12_Relational_DB.Controllers
 
             if(result.Succeeded)
             {
-                if(user.Email == _config["DistrictManagerSeed"])
-                {
-                    await _userManager.AddToRoleAsync(user, ApplicationRoles.DistrictManager);
-                }
+                await _userManager.AddToRoleAsync(user, register.Role);
 
                 //sign the user in if it was successful.
                 await _signInManager.SignInAsync(user, false);
@@ -81,7 +81,9 @@ namespace Lab12_Relational_DB.Controllers
         /// </summary>
         /// <param name="login">A unique LoginDTO object</param>
         /// <returns>Task result: either an Ok or a BadRequest message</returns>
+        // api/account/login
         [HttpPost, Route("Login")]
+        [AllowAnonymous]
         public async Task<IActionResult> Login(LoginDTO login)
         {
             var result = await _signInManager.PasswordSignInAsync(login.Email, login.Password, false, false);
@@ -90,7 +92,11 @@ namespace Lab12_Relational_DB.Controllers
                 // look the user up
                 var user = await _userManager.FindByEmailAsync(login.Email);
 
-                var token = CreateToken(user);
+                // User is our identity "Principle"
+
+                var identityRole = await _userManager.GetRolesAsync(user);
+
+                var token = CreateToken(user, identityRole.ToList());
 
                 // make them a token based on their account
 
@@ -106,48 +112,46 @@ namespace Lab12_Relational_DB.Controllers
             }
 
             return BadRequest("Invalid attempt");
-
         }
-
+        
+        [Authorize(Policy = "ElevatedPrivileges")]
         [HttpPost, Route("assign/role")]
-        [Authorize(Roles = ApplicationRoles.DistrictManager)]
         public async Task AssignRoleToUser(AssignRoleDTO assignment)
         {
             var user = await _userManager.FindByEmailAsync(assignment.Email);
 
-
-            //validation here to confirm the role is valid
-            //string role = "";
-            //if(assignment.Role.ToUpper == "Advisor")
-            //{
-            //    role = ApplicationRoles.Advisor;
-            //}
-
             await _userManager.AddToRoleAsync(user, assignment.Role);
         }
 
-        private JwtSecurityToken CreateToken(ApplicationUser user)
+        private JwtSecurityToken CreateToken(ApplicationUser user, List<string> role)
         {
             // Token requires pieces of information called "claims"
             // Person/User is the principle
-            // A principle can have many forms of identity
+            // A principal can have many forms of identity
             // An identity contains many claims
             // a claim is a single statement about the user
 
-            var authClaims = new[]
+            var authClaims = new List<Claim>()
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim("FirstName", user.FirstName),
                 new Claim("LastName", user.LastName),
                 new Claim("UserId", user.Id)
+                //optional, add fav-color claim
             };
+
+            foreach (var item in role)
+            {
+                authClaims.Add(new Claim(ClaimTypes.Role, item));
+            }
+
             var token = AuthenticateToken(authClaims);
 
             return token;
         }
 
-        private JwtSecurityToken AuthenticateToken(Claim[] claims)
+        private JwtSecurityToken AuthenticateToken(List<Claim> claims)
         {
             var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JWTKey"]));
 
@@ -155,6 +159,7 @@ namespace Lab12_Relational_DB.Controllers
                 issuer: _config["JWTIssuer"],
                 audience: _config["JWTIssuer"],
                 expires: DateTime.UtcNow.AddHours(24),
+                claims: claims,
                 signingCredentials: new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256)
                 );
 

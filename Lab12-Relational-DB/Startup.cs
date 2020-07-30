@@ -88,7 +88,11 @@ namespace Lab12_Relational_DB
             // Add my policies:
             services.AddAuthorization(options =>
            {
-               options.AddPolicy("DistrictManagerOnly", policy => policy.RequireRole(ApplicationRoles.DistrictManager));
+               options.AddPolicy("ElevatedPrivileges", policy => policy.RequireRole(ApplicationRoles.DistrictManager, ApplicationRoles.PropertyManager));
+
+               options.AddPolicy("ManagersOnly", policy => policy.RequireRole(ApplicationRoles.DistrictManager));
+
+               options.AddPolicy("ColorPolicy", policy => policy.RequireClaim("FavColor"));
            });
 
             // MAPPING - register my Dependency Injection Services
@@ -113,7 +117,7 @@ namespace Lab12_Relational_DB
             app.UseAuthentication();
             app.UseAuthorization();
 
-            RoleInitializer.SeedData(serviceProvider);
+            RoleInitializer.SeedData(serviceProvider, UserManager, Configuration);
 
             app.UseEndpoints(endpoints =>
             {
