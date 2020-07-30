@@ -18,6 +18,12 @@ namespace Lab12_Relational_DB.Model.Services
             _context = context;
         }
 
+        /// <summary>
+        /// Creates a new entry in the Hotels database table,
+        /// based on the hotel parameter.
+        /// </summary>
+        /// <param name="hotel">Unique identifier of the hotel</param>
+        /// <returns>The created hotel object</returns>
         public async Task<Hotel> Create(Hotel hotel)
         {
             // when I have a hotel, I want to add them to the database.
@@ -34,6 +40,12 @@ namespace Lab12_Relational_DB.Model.Services
 
         }
 
+        /// <summary>
+        /// Deletes a hotel from the Hotels database table,
+        /// based on the hotel Id parameter.
+        /// </summary>
+        /// <param name="id">Unique identifier of the room</param>
+        /// <returns>Task of completion</returns>
         public async Task Delete(int id)
         {
             Hotel hotel = await GetHotel(id);
@@ -42,6 +54,13 @@ namespace Lab12_Relational_DB.Model.Services
             await _context.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// Returns the specified hotel and a list of all of the rooms, room amenities, and amenities 
+        /// associated with the hotel in the Hotels database table.
+        /// </summary>
+        /// <param name="id">Unique identifier of the hotel</param>
+        /// <returns>The specified hotel and a list of all of the associated 
+        /// rooms, room amenities, and amenities</returns>
         public async Task<Hotel> GetHotel(int id)
         {
             // Look in the DB on the Hotel table, 
@@ -56,6 +75,12 @@ namespace Lab12_Relational_DB.Model.Services
             return hotel;
         }
 
+        /// <summary>
+        /// Returns a list of all of the hotels in the Hotels database table,
+        /// and all of the rooms, room amenities, and amenities associated with each hotel.
+        /// </summary>
+        /// <returns>A list of all hotels and all of the rooms, room amenities, 
+        /// and amenities associated with each hotel.</returns>
         public async Task<List<Hotel>> GetHotels()
         {
             var hotels = await _context.Hotels.Include(h => h.HotelRooms)
@@ -67,6 +92,12 @@ namespace Lab12_Relational_DB.Model.Services
             return hotels;
         }
 
+        /// <summary>
+        /// Updates a specific hotel in the Hotels database table,
+        /// based on the hotel parameter.
+        /// </summary>
+        /// <param name="hotel">Unique identifier of the hotel</param>
+        /// <returns>The updated hotel object</returns>
         public async Task<Hotel> Update(Hotel hotel)
         {
             _context.Entry(hotel).State = EntityState.Modified;

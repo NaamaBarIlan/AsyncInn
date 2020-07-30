@@ -8,7 +8,7 @@ namespace Lab12_Relational_DB.Model.Interfaces
     public interface IRoom
     {
         /// <summary>
-        /// Creates a new entry in the Room database table,
+        /// Creates a new entry in the Rooms database table,
         /// based on the room parameter.
         /// </summary>
         /// <param name="room">Unique identifier of the room</param>
@@ -16,21 +16,22 @@ namespace Lab12_Relational_DB.Model.Interfaces
         Task<Room> Create(Room room);
 
         /// <summary>
-        /// Returns a list of all of the rooms in the Room database table,
+        /// Returns a list of all of the rooms in the Rooms database table,
         /// and all of the RoomAmenities associated with each room.
         /// </summary>
         /// <returns>A list of all the rooms and associated RoomAmenities</returns>
         Task<List<Room>> GetRooms();
 
         /// <summary>
-        /// Returns a list of all of the RoomAmenities associated with the specified room.
+        /// Returns a list of all of the RoomAmenities associated with the specified room,
+        /// in the Rooms database table
         /// </summary>
         /// <param name="id">Unique identifier of the room</param>
         /// <returns>A list of all RoomAmenities in the specific room</returns>
         Task<Room> GetRoom(int id);
 
         /// <summary>
-        /// Updates a specific room in the Rooms database,
+        /// Updates a specific room in the Rooms database table,
         /// based on the room parameter.
         /// </summary>
         /// <param name="room">Unique identifier of the room</param>
@@ -46,7 +47,7 @@ namespace Lab12_Relational_DB.Model.Interfaces
         Task Delete(int id);
 
         /// <summary>
-        /// Adds a specified amenity from a specific room to the room database table.
+        /// Adds a specified amenity from a specific room to the Rooms database table.
         /// </summary>
         /// <param name="roomId">Unique identifier of the room</param>
         /// <param name="amenityId">Unique identifier of the</param>
@@ -54,7 +55,7 @@ namespace Lab12_Relational_DB.Model.Interfaces
         Task AddAmenityToRoom(int roomId, int amenityId);
 
         /// <summary>
-        /// Removes a specified amenity from a specific room in the Room database table.
+        /// Removes a specified amenity from a specific room in the Rooms database table.
         /// </summary>
         /// <param name="roomId">Unique identifier of the room</param>
         /// <param name="amenityId">Unique identifier of the amenity</param>
