@@ -34,6 +34,7 @@ namespace Lab12_Relational_DB.Controllers
 
         // GET: api/Hotels/5
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<ActionResult<Hotel>> GetHotel(int id)
         {
             Hotel hotel = await _hotel.GetHotel(id);

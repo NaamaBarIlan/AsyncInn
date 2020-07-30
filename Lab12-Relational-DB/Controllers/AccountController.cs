@@ -23,8 +23,9 @@ namespace Lab12_Relational_DB.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
-    // This Authorize tag makes the Whole contro
-    [Authorize]
+    // This Authorize tag locks down the whole controller 
+    // Authorize is set for the entire app in Startup.cs
+    //[Authorize]
     public class AccountController : ControllerBase
     {
         private UserManager<ApplicationUser> _userManager;
@@ -83,7 +84,6 @@ namespace Lab12_Relational_DB.Controllers
         /// <returns>Task result: either an Ok or a BadRequest message</returns>
         // api/account/login
         [HttpPost, Route("Login")]
-        [AllowAnonymous]
         public async Task<IActionResult> Login(LoginDTO login)
         {
             var result = await _signInManager.PasswordSignInAsync(login.Email, login.Password, false, false);
@@ -114,7 +114,7 @@ namespace Lab12_Relational_DB.Controllers
             return BadRequest("Invalid attempt");
         }
         
-        [Authorize(Policy = "ElevatedPrivileges")]
+        [Authorize(Policy = "DistrictManagerPrivileges")]
         [HttpPost, Route("assign/role")]
         public async Task AssignRoleToUser(AssignRoleDTO assignment)
         {
