@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Lab12_Relational_DB.Data;
 using Lab12_Relational_DB.Model;
 using Lab12_Relational_DB.Model.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Lab12_Relational_DB.Controllers
 {
@@ -24,6 +25,7 @@ namespace Lab12_Relational_DB.Controllers
 
         // GET: api/Hotels
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<Hotel>>> GetHotels()
         {
             

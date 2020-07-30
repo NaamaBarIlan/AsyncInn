@@ -16,7 +16,6 @@ namespace Lab12_Relational_DB.Controllers
 {
     
     [Route("api/[controller]")]
-    [Authorize]
     [ApiController]
     public class RoomsController : ControllerBase
     {
