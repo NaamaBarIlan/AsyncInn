@@ -101,6 +101,10 @@ This added level of abstraction created loosely coupled components, and ensures 
 
 ### Change Log
 
+1.7 *Edited the summary comments of the interfaces and repositories* - 30 Jul 2020
+
+1.6 *Added roles and roles seeding. Set up unit tests* - 29 Jul 2020
+
 1.5 *Added identity: user registration and user login* - 28 Jul 2020
 
 1.4 *Added DTOs to the application* - 27 Jul 2020
