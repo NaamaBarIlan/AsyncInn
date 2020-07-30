@@ -9,43 +9,42 @@ namespace Lab12_Relational_DB.Model.Interfaces
     public interface IAmenity
     {
         /// <summary>
-        /// This method takes an AmenityDTO object as paramater 
-        /// and creates a new entry in the Amenity database table
+        /// Creates a new entry in the Amenity database table,
+        /// based on the AmenityDTO parameter.
         /// </summary>
         /// <param name="amenityDto">A unique AmenityDTO object</param>
-        /// <returns>The amenityDto object</returns>
+        /// <returns>The created amenityDto object</returns>
         Task<AmenityDTO> Create(AmenityDTO amenityDto);
 
         /// <summary>
-        /// This method pulls a list of all the rows in the Amenities database table 
-        /// and converts them into AmenityDTOs.
+        /// Returns a list of all the Amenities in the Amenities database table,
+        /// converted into AmenityDTOs objects.
         /// </summary>
-        /// <returns>Returns a list of all of the AmenityDtos</returns>
+        /// <returns>A list of all of the AmenityDtos</returns>
         Task<List<AmenityDTO>> GetAmenities();
 
         /// <summary>
-        /// This method takes an Amenity id, 
-        /// pulls that specific row in the Amenities database table 
-        /// and converts it into an AmenityDto.
+        /// Returns a specific Amenity from the Amenities database table,
+        /// converted into an AmenityDto.
         /// </summary>
         /// <param name="id">A unique integer amenity ID value</param>
         /// <returns>A specific amenityDto object</returns>
         Task<AmenityDTO> GetAmenity(int id);
 
         /// <summary>
-        /// This method takes an amenityDto object
-        /// and updates the entry in the Amenity database.
+        /// Updates a specific Amenity in the Amenity database,
+        /// based on the amenityDto parameter.
         /// </summary>
         /// <param name="amenityDto">A unique amenityDto object</param>
-        /// <returns>The updated amenityDto object</returns>
+        /// <returns>An updated amenityDto object</returns>
         Task<AmenityDTO> Update(AmenityDTO amenityDto);
 
         /// <summary>
-        /// This method takes an Amenity Id integer
-        /// and deletes the corresponding row from the Amenities database table
+        /// Deletes an Amenity from the Amenities database table,
+        /// based on the Amenity Id parameter.
         /// </summary>
         /// <param name="id">A unique Amenity ID number</param>
-        /// <returns>The complete task</returns>
+        /// <returns>An empty task object</returns>
         Task Delete(int id);
     }
 }
