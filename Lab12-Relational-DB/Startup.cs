@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Lab12_Relational_DB.Data;
 using Lab12_Relational_DB.Model;
 using Lab12_Relational_DB.Model.Interfaces;
 using Lab12_Relational_DB.Model.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -14,6 +16,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Lab12_Relational_DB
 {
@@ -59,6 +63,38 @@ namespace Lab12_Relational_DB
                     .AddEntityFrameworkStores<AsyncInnDbContext>()
                     .AddDefaultTokenProviders();
 
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = false,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = Configuration["JWTIssuer"],
+                    IssuerSigningKey = new SymmetricSecurityKey
+                    (Encoding.UTF8.GetBytes(Configuration["JWTKey"]))
+
+                };
+            });
+
+
+            // Add my policies:
+            services.AddAuthorization(options =>
+           {
+               options.AddPolicy("ElevatedPrivileges", policy => policy.RequireRole(ApplicationRoles.DistrictManager, ApplicationRoles.PropertyManager));
+
+               options.AddPolicy("ManagersOnly", policy => policy.RequireRole(ApplicationRoles.DistrictManager));
+
+               options.AddPolicy("ColorPolicy", policy => policy.RequireClaim("FavColor"));
+           });
+
             // MAPPING - register my Dependency Injection Services
             services.AddTransient<IHotel, HotelRepository>();
             services.AddTransient<IRoom, RoomRepository>();
@@ -68,7 +104,7 @@ namespace Lab12_Relational_DB
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider)
         {
             if (env.IsDevelopment())
             {
@@ -76,6 +112,12 @@ namespace Lab12_Relational_DB
             }
 
             app.UseRouting();
+
+            // Important! This has to be after UseRouting()!
+            app.UseAuthentication();
+            app.UseAuthorization();
+
+            RoleInitializer.SeedData(serviceProvider, UserManager, Configuration);
 
             app.UseEndpoints(endpoints =>
             {

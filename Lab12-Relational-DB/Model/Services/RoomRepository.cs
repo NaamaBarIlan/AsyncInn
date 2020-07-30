@@ -18,6 +18,12 @@ namespace Lab12_Relational_DB.Model.Services
             _context = context;
         }
 
+        /// <summary>
+        /// Creates a new entry in the Rooms database table,
+        /// based on the room parameter.
+        /// </summary>
+        /// <param name="room">Unique identifier of the room</param>
+        /// <returns>The created room object</returns>
         public async Task<Room> Create(Room room)
         {
             // when I have a room, I want to add them to the db:
@@ -29,6 +35,12 @@ namespace Lab12_Relational_DB.Model.Services
             return room;
         }
 
+        /// <summary>
+        /// Deletes a room from the Rooms database table,
+        /// based on the room Id parameter.
+        /// </summary>
+        /// <param name="id">Unique identifier of the room</param>
+        /// <returns>Task of completion</returns>
         public async Task Delete(int id)
         {
             Room room = await GetRoom(id);
@@ -38,10 +50,11 @@ namespace Lab12_Relational_DB.Model.Services
         }
 
         /// <summary>
-        /// Gets a specific room by Id, including all of the RoomAmenities that the room has
+        /// Returns a list of all of the RoomAmenities associated with the specified room,
+        /// in the Rooms database table
         /// </summary>
         /// <param name="id">Unique identifier of the room</param>
-        /// <returns>The list of all RoomAmenities in the specific room</returns>
+        /// <returns>A list of all RoomAmenities in the specific room</returns>
         public async Task<Room> GetRoom(int id)
         {
             var room = await _context.Rooms.Where(r => r.Id == id)
@@ -52,6 +65,11 @@ namespace Lab12_Relational_DB.Model.Services
             return room;
         }
 
+        /// <summary>
+        /// Returns a list of all of the rooms in the Rooms database table,
+        /// and all of the RoomAmenities associated with each room.
+        /// </summary>
+        /// <returns>A list of all the rooms and associated RoomAmenities</returns>
         public async Task<List<Room>> GetRooms()
         {
             var rooms = await _context.Rooms.Include(r => r.RoomAmenities)
@@ -62,6 +80,12 @@ namespace Lab12_Relational_DB.Model.Services
             return rooms;
         }
 
+        /// <summary>
+        /// Updates a specific room in the Rooms database table,
+        /// based on the room parameter.
+        /// </summary>
+        /// <param name="room">Unique identifier of the room</param>
+        /// <returns>The updated room object</returns>
         public async Task<Room> Update(Room room)
         {
             _context.Entry(room).State = EntityState.Modified;
@@ -70,9 +94,8 @@ namespace Lab12_Relational_DB.Model.Services
             return room;
         }
 
-
         /// <summary>
-        /// Adds a specified amenity from a specific room
+        /// Adds a specified amenity from a specific room to the Rooms database table.
         /// </summary>
         /// <param name="roomId">Unique identifier of the room</param>
         /// <param name="amenityId">Unique identifier of the</param>
@@ -91,7 +114,7 @@ namespace Lab12_Relational_DB.Model.Services
         }
 
         /// <summary>
-        /// Removes a specified amenity from a specific room
+        /// Removes a specified amenity from a specific room in the Rooms database table.
         /// </summary>
         /// <param name="roomId">Unique identifier of the room</param>
         /// <param name="amenityId">Unique identifier of the amenity</param>

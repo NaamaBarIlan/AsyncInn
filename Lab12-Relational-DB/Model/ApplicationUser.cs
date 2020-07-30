@@ -12,4 +12,14 @@ namespace Lab12_Relational_DB.Model
 
         public string LastName { get; set; }
     }
+
+    public static class ApplicationRoles
+    {
+        public const string DistrictManager = "DistrictManager";
+
+        public const string PropertyManager = "PropertyManager";
+
+        public const string Agent = "Agent";
+
+    }
 }
