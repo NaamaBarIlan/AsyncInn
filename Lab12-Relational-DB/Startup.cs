@@ -95,11 +95,11 @@ namespace Lab12_Relational_DB
             // Add my policies:
             services.AddAuthorization(options =>
            {
-               options.AddPolicy("DistrictManagerPrivileges", policy => policy.RequireRole(ApplicationRoles.DistrictManager));
+               options.AddPolicy("GoldPrivileges", policy => policy.RequireRole(ApplicationRoles.DistrictManager));
 
-               options.AddPolicy("PropertyManagerPrivileges", policy => policy.RequireRole(ApplicationRoles.PropertyManager));
+               options.AddPolicy("SilverPrivileges", policy => policy.RequireRole(ApplicationRoles.DistrictManager, ApplicationRoles.PropertyManager));
 
-               options.AddPolicy("AgentPrivileges", policy => policy.RequireRole(ApplicationRoles.Agent));
+               options.AddPolicy("BronzePrivileges", policy => policy.RequireRole(ApplicationRoles.DistrictManager, ApplicationRoles.PropertyManager, ApplicationRoles.Agent));
 
                //To add a policy based on a claim:
                ///options.AddPolicy("ColorPolicy", policy => policy.RequireClaim("FavColor"));

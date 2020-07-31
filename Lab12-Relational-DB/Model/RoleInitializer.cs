@@ -36,19 +36,51 @@ namespace Lab12_Relational_DB.Model
 
         private static void SeedUsers(UserManager<ApplicationUser> userManager, IConfiguration _config)
         {
-            if(userManager.FindByEmailAsync(_config["AdminEmail"]).Result == null)
+            if(userManager.FindByEmailAsync(_config["DistrictManagerEmail"]).Result == null)
             {
                 ApplicationUser user = new ApplicationUser();
-                user.UserName = _config["AdminEmail"];
-                user.Email = _config["AdminEmail"];
-                user.FirstName = "Amanda";
-                user.LastName = "Iverson";
+                user.UserName = _config["DistrictManagerEmail"];
+                user.Email = _config["DistrictManagerEmail"];
+                user.FirstName = "Jean";
+                user.LastName = "Grey";
 
-                IdentityResult result = userManager.CreateAsync(user, _config["AdminPassword"]).Result;
+                IdentityResult result = userManager.CreateAsync(user, _config["DistrictManagerPassword"]).Result;
 
                 if(result.Succeeded)
                 {
                     userManager.AddToRoleAsync(user, ApplicationRoles.DistrictManager).Wait();
+                }
+            }
+
+            if (userManager.FindByEmailAsync(_config["PropertyManagerEmail"]).Result == null)
+            {
+                ApplicationUser user = new ApplicationUser();
+                user.UserName = _config["PropertyManagerEmail"];
+                user.Email = _config["PropertyManagerEmail"];
+                user.FirstName = "Anna-Marie";
+                user.LastName = "LeBeau";
+
+                IdentityResult result = userManager.CreateAsync(user, _config["PropertyManagerPassword"]).Result;
+
+                if (result.Succeeded)
+                {
+                    userManager.AddToRoleAsync(user, ApplicationRoles.PropertyManager).Wait();
+                }
+            }
+
+            if (userManager.FindByEmailAsync(_config["AgentEmail"]).Result == null)
+            {
+                ApplicationUser user = new ApplicationUser();
+                user.UserName = _config["AgentEmail"];
+                user.Email = _config["AgentEmail"];
+                user.FirstName = "Danielle";
+                user.LastName = "Moonstar";
+
+                IdentityResult result = userManager.CreateAsync(user, _config["AgentPassword"]).Result;
+
+                if (result.Succeeded)
+                {
+                    userManager.AddToRoleAsync(user, ApplicationRoles.Agent).Wait();
                 }
             }
 

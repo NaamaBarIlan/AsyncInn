@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace Lab12_Relational_DB.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize(Policy = "GoldPrivileges")]
     [ApiController]
     public class HotelsController : ControllerBase
     {
@@ -26,6 +27,7 @@ namespace Lab12_Relational_DB.Controllers
         // GET: api/Hotels
         [HttpGet]
         [AllowAnonymous]
+        //[Authorize(Policy = "DistrictManagerPrivileges")]
         public async Task<ActionResult<IEnumerable<Hotel>>> GetHotels()
         {
             

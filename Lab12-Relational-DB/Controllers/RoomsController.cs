@@ -28,7 +28,7 @@ namespace Lab12_Relational_DB.Controllers
 
         // GET: api/Rooms
         [HttpGet]
-        [AllowAnonymous]
+        [Authorize(Policy = "SilverPrivileges")]
         public async Task<ActionResult<IEnumerable<Room>>> GetRooms()
         {
             return await _room.GetRooms();
@@ -36,6 +36,7 @@ namespace Lab12_Relational_DB.Controllers
 
         // GET: api/Rooms/5
         [HttpGet("{id}")]
+        [Authorize(Policy = "SilverPrivileges")]
         public async Task<ActionResult<Room>> GetRoom(int id)
         {
             Room room = await _room.GetRoom(id);
@@ -46,6 +47,7 @@ namespace Lab12_Relational_DB.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
+        [Authorize(Policy = "SilverPrivileges")]
         public async Task<IActionResult> PutRoom(int id, Room room)
         {
             if (id != room.Id)
@@ -61,6 +63,7 @@ namespace Lab12_Relational_DB.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
+        [Authorize(Policy = "GoldPrivileges")]
         public async Task<ActionResult<Room>> PostRoom(Room room)
         {
             await _room.Create(room);
@@ -69,6 +72,7 @@ namespace Lab12_Relational_DB.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = "BronzePrivileges")]
         [Route("{roomId}/Amenity/{AmenityId}")]
         //POST: {roomId}/Amenity/{AmenityId}
         // Model Binding
@@ -80,6 +84,7 @@ namespace Lab12_Relational_DB.Controllers
 
         // DELETE: api/Rooms/5
         [HttpDelete("{id}")]
+        [Authorize(Policy = "GoldPrivileges")]
         public async Task<ActionResult<Room>> DeleteRoom(int id)
         {
             await _room.Delete(id);
@@ -88,6 +93,7 @@ namespace Lab12_Relational_DB.Controllers
 
         // DELETE An Amenity from room
         [HttpDelete]
+        [Authorize(Policy = "BronzePrivileges")]
         [Route("{roomId}/Amenity/{amenityId}")]
         public async Task<IActionResult> RemoveAmenityFromRoom(int roomId, int amenityId)
         {

@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Lab12_Relational_DB.Data;
 using Lab12_Relational_DB.Model;
 using Lab12_Relational_DB.Model.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Lab12_Relational_DB.Controllers
 {
@@ -22,8 +23,9 @@ namespace Lab12_Relational_DB.Controllers
             _hotelRoom = hotelRoom;
         }
 
-        // GET: api/Hotel/4/HotelRooms
+        // GET: api/Hotels/4/Rooms
         [HttpGet, Route("/api/Hotels/{hotelId}/Rooms")]
+        [Authorize(Policy = "BronzePrivileges")]
         public async Task<ActionResult<IEnumerable<HotelRoom>>> GetHotelRooms(int hotelId)
         {
             return await _hotelRoom.GetHotelRooms(hotelId);
@@ -32,6 +34,7 @@ namespace Lab12_Relational_DB.Controllers
 
         // GET: api/Hotels/5/Rooms/{roomNumber}
         [HttpGet("/api/Hotels/{hotelId}/Rooms/{roomNumber}")]
+        [Authorize(Policy = "BronzePrivileges")]
         public async Task<ActionResult<HotelRoom>> GetSingleHotelRoom(int hotelId, int roomNumber)
         {
             var hotelRoom = await _hotelRoom.GetSingleHotelRoom(hotelId, roomNumber);
@@ -48,6 +51,7 @@ namespace Lab12_Relational_DB.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("/api/Hotels/{hotelId}/Rooms/{roomNumber}")]
+        [Authorize(Policy = "BronzePrivileges")]
         public async Task<IActionResult> PutHotelRoom(int hotelId, int roomNumber, HotelRoom hotelRoom)
         {
             if (hotelId != hotelRoom.HotelId || roomNumber != hotelRoom.RoomNumber)
@@ -65,6 +69,7 @@ namespace Lab12_Relational_DB.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost, Route("/api/Hotels/{hotelId}/Rooms")]
+        [Authorize(Policy = "SilverPrivileges")]
         public async Task<ActionResult<HotelRoom>> PostHotelRoom(HotelRoom hotelRoom, int hotelId)
         {
             await _hotelRoom.Create(hotelRoom, hotelId);
@@ -74,6 +79,7 @@ namespace Lab12_Relational_DB.Controllers
 
         // DELETE: api/HotelRooms/5
         [HttpDelete("/api/Hotels/{hotelId}/Rooms/{roomNumber}")]
+        [Authorize(Policy = "GoldPrivileges")]
         public async Task<ActionResult<HotelRoom>> DeleteHotelRoom(int hotelId, int roomNumber)
         {
             await _hotelRoom.Delete(roomNumber, hotelId);

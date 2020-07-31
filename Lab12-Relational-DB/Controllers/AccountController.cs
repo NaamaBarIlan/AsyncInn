@@ -48,7 +48,7 @@ namespace Lab12_Relational_DB.Controllers
         /// <returns>Task result: either an Ok or a BadRequest message</returns>
         // api/account/register
         [HttpPost, Route("register")]
-
+        [Authorize(Policy = "SilverPrivileges")]
         public async Task<IActionResult> Register(RegisterDTO register)
         {   
             ApplicationUser user = new ApplicationUser()
@@ -64,6 +64,11 @@ namespace Lab12_Relational_DB.Controllers
 
             if(result.Succeeded)
             {
+                if(User.IsInRole("PropertyManager") && register.Role == "PropertyManager" || register.Role == "DistrictManager")
+                {
+                    return BadRequest("Invalid Request");
+                }
+
                 await _userManager.AddToRoleAsync(user, register.Role);
 
                 //sign the user in if it was successful.
@@ -84,6 +89,7 @@ namespace Lab12_Relational_DB.Controllers
         /// <returns>Task result: either an Ok or a BadRequest message</returns>
         // api/account/login
         [HttpPost, Route("Login")]
+        [AllowAnonymous]
         public async Task<IActionResult> Login(LoginDTO login)
         {
             var result = await _signInManager.PasswordSignInAsync(login.Email, login.Password, false, false);
@@ -114,8 +120,8 @@ namespace Lab12_Relational_DB.Controllers
             return BadRequest("Invalid attempt");
         }
         
-        [Authorize(Policy = "DistrictManagerPrivileges")]
         [HttpPost, Route("assign/role")]
+        [Authorize(Policy = "SilverPrivileges")]
         public async Task AssignRoleToUser(AssignRoleDTO assignment)
         {
             var user = await _userManager.FindByEmailAsync(assignment.Email);
