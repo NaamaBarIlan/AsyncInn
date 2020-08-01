@@ -64,7 +64,8 @@ namespace Lab12_Relational_DB.Controllers
 
             if(result.Succeeded)
             {
-                if(User.IsInRole("PropertyManager") && register.Role == "PropertyManager" || register.Role == "DistrictManager")
+                if ((User.IsInRole("PropertyManager") && register.Role == "PropertyManager") || 
+                    (User.IsInRole("PropertyManager") &&  register.Role == "DistrictManager"))
                 {
                     return BadRequest("Invalid Request");
                 }

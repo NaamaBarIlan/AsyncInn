@@ -3,6 +3,9 @@ using Lab12_Relational_DB.Model.Interfaces;
 using Lab12_Relational_DB.Model.Services;
 using System;
 using Xunit;
+using Microsoft.EntityFrameworkCore.Storage;
+using System.Threading.Tasks;
+using Lab12_Relational_DB.Model.DTOs;
 
 namespace XUnitTest_AsyncInn
 {
@@ -12,28 +15,34 @@ namespace XUnitTest_AsyncInn
         {
             return new AmenityRepository(_db);
         }
-        
-        //[Fact]
-        //public void CanSaveAndGet()
-        //{
-        //    // Arrange
-        //    // TODO - convert the DTO
 
-        //    var amenity = new Amenity
-        //    {
-        //        Id = 22,
-        //        Name = "TV"
-        //    };
+        [Fact]
+        public async Task CanSaveAndGet()
+        {
+            // Arrange
 
-        //    var repository = BuildRepository();
 
-        //    // Act
-        //    var saved = repository.Create(amenity);
+            var amenity = new Amenity
+            {
+                Id = 22,
+                Name = "TV"
+            };
 
-        //    Assert.NotNull(saved);
-        //    Assert.NotEqual(0, amenity.Id);
-        //    Assert.Equal(saved.Id, amenity.Id);
-        //    Assert.Equal(amenity.Name, saved.Name);
-        //}
+            var amenityDto = new AmenityDTO
+            {
+                ID = amenity.Id,
+                Name = amenity.Name
+            };
+
+            var repository = BuildRepository();
+
+            // Act
+            AmenityDTO saved = await repository.Create(amenityDto);
+
+            Assert.NotNull(saved);
+            Assert.NotEqual(0, amenityDto.ID);
+            Assert.Equal(saved.ID, amenityDto.ID);
+            Assert.Equal(amenity.Name, saved.Name);
+        }
     }
 }
