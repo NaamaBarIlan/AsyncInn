@@ -11,6 +11,7 @@ using Lab12_Relational_DB.Model.Interfaces;
 using System.Security.Cryptography.X509Certificates;
 using SQLitePCL;
 using Microsoft.AspNetCore.Authorization;
+using Lab12_Relational_DB.Model.DTOs;
 
 namespace Lab12_Relational_DB.Controllers
 {
@@ -29,7 +30,7 @@ namespace Lab12_Relational_DB.Controllers
         // GET: api/Rooms
         [HttpGet]
         [Authorize(Policy = "SilverPrivileges")]
-        public async Task<ActionResult<IEnumerable<Room>>> GetRooms()
+        public async Task<ActionResult<IEnumerable<RoomDTO>>> GetRooms()
         {
             return await _room.GetRooms();
         }
@@ -37,10 +38,10 @@ namespace Lab12_Relational_DB.Controllers
         // GET: api/Rooms/5
         [HttpGet("{id}")]
         [Authorize(Policy = "SilverPrivileges")]
-        public async Task<ActionResult<Room>> GetRoom(int id)
+        public async Task<ActionResult<RoomDTO>> GetRoom(int id)
         {
-            Room room = await _room.GetRoom(id);
-            return room;
+            RoomDTO roomDto = await _room.GetRoom(id);
+            return roomDto;
         }
 
         // PUT: api/Rooms/5
@@ -48,14 +49,14 @@ namespace Lab12_Relational_DB.Controllers
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
         [Authorize(Policy = "SilverPrivileges")]
-        public async Task<IActionResult> PutRoom(int id, Room room)
+        public async Task<IActionResult> PutRoom(int id, RoomDTO roomDto)
         {
-            if (id != room.Id)
+            if (id != roomDto.ID)
             {
                 return BadRequest();
             }
 
-            var updatedRoom = await _room.Update(room);
+            var updatedRoom = await _room.Update(roomDto);
             return Ok(updatedRoom);
         }
 
@@ -64,11 +65,11 @@ namespace Lab12_Relational_DB.Controllers
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
         [Authorize(Policy = "GoldPrivileges")]
-        public async Task<ActionResult<Room>> PostRoom(Room room)
+        public async Task<ActionResult<RoomDTO>> PostRoom(RoomDTO roomDto)
         {
-            await _room.Create(room);
+            await _room.Create(roomDto);
 
-            return CreatedAtAction("GetRoom", new { id = room.Id }, room);
+            return CreatedAtAction("GetRoom", new { id = roomDto.ID }, roomDto);
         }
 
         [HttpPost]
