@@ -23,8 +23,9 @@ namespace Lab12_Relational_DB.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
-    // This Authorize tag makes the Whole contro
-    [Authorize]
+    // This Authorize tag locks down the whole controller 
+    // Authorize is set for the entire app in Startup.cs
+    //[Authorize]
     public class AccountController : ControllerBase
     {
         private UserManager<ApplicationUser> _userManager;
@@ -47,7 +48,7 @@ namespace Lab12_Relational_DB.Controllers
         /// <returns>Task result: either an Ok or a BadRequest message</returns>
         // api/account/register
         [HttpPost, Route("register")]
-
+        [Authorize(Policy = "SilverPrivileges")]
         public async Task<IActionResult> Register(RegisterDTO register)
         {   
             ApplicationUser user = new ApplicationUser()
@@ -63,6 +64,12 @@ namespace Lab12_Relational_DB.Controllers
 
             if(result.Succeeded)
             {
+                if ((User.IsInRole("PropertyManager") && register.Role == "PropertyManager") || 
+                    (User.IsInRole("PropertyManager") &&  register.Role == "DistrictManager"))
+                {
+                    return BadRequest("Invalid Request");
+                }
+
                 await _userManager.AddToRoleAsync(user, register.Role);
 
                 //sign the user in if it was successful.
@@ -114,8 +121,8 @@ namespace Lab12_Relational_DB.Controllers
             return BadRequest("Invalid attempt");
         }
         
-        [Authorize(Policy = "ElevatedPrivileges")]
         [HttpPost, Route("assign/role")]
+        [Authorize(Policy = "SilverPrivileges")]
         public async Task AssignRoleToUser(AssignRoleDTO assignment)
         {
             var user = await _userManager.FindByEmailAsync(assignment.Email);

@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -40,7 +41,13 @@ namespace Lab12_Relational_DB
             // This is where all of our dependencies are going to live.
             // Enable the use of using controllers within the MVC convention
             // Instal-Package Microsoft.AspNetCore.Mvc.NewtonsoftJson - Version 3.1.2
-            services.AddControllers().AddNewtonsoftJson(options =>
+            services.AddControllers(options =>
+            {
+                //Make all routes by default autorized to require login:
+                options.Filters.Add(new AuthorizeFilter());
+
+            })
+                .AddNewtonsoftJson(options =>
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
                 );
 
@@ -88,11 +95,14 @@ namespace Lab12_Relational_DB
             // Add my policies:
             services.AddAuthorization(options =>
            {
-               options.AddPolicy("ElevatedPrivileges", policy => policy.RequireRole(ApplicationRoles.DistrictManager, ApplicationRoles.PropertyManager));
+               options.AddPolicy("GoldPrivileges", policy => policy.RequireRole(ApplicationRoles.DistrictManager));
 
-               options.AddPolicy("ManagersOnly", policy => policy.RequireRole(ApplicationRoles.DistrictManager));
+               options.AddPolicy("SilverPrivileges", policy => policy.RequireRole(ApplicationRoles.DistrictManager, ApplicationRoles.PropertyManager));
 
-               options.AddPolicy("ColorPolicy", policy => policy.RequireClaim("FavColor"));
+               options.AddPolicy("BronzePrivileges", policy => policy.RequireRole(ApplicationRoles.DistrictManager, ApplicationRoles.PropertyManager, ApplicationRoles.Agent));
+
+               //To add a policy based on a claim:
+               ///options.AddPolicy("ColorPolicy", policy => policy.RequireClaim("FavColor"));
            });
 
             // MAPPING - register my Dependency Injection Services
@@ -113,11 +123,13 @@ namespace Lab12_Relational_DB
 
             app.UseRouting();
 
-            // Important! This has to be after UseRouting()!
+            // Important! Auth has to be after UseRouting()!
             app.UseAuthentication();
             app.UseAuthorization();
 
-            RoleInitializer.SeedData(serviceProvider, UserManager, Configuration);
+            var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+
+            RoleInitializer.SeedData(serviceProvider, userManager, Configuration);
 
             app.UseEndpoints(endpoints =>
             {

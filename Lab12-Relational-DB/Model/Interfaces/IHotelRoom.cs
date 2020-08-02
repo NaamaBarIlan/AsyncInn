@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Lab12_Relational_DB.Model.DTOs;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -15,7 +16,7 @@ namespace Lab12_Relational_DB.Model.Interfaces
         /// <param name="hotelRoom">The unique hotelRoom object to be created</param>
         /// <param name="hotelId">The unique hotelId used to create the hotelRoom</param>
         /// <returns>The hotelRoom object that was created</returns>
-        Task<HotelRoom> Create(HotelRoom hotelroom, int hotelId);
+        Task<HotelRoomDTO> Create(HotelRoomDTO hotelroomDto, int hotelId);
 
         /// <summary>
         /// Updates a hotelroom in the database HotelRoom table, 
@@ -23,7 +24,7 @@ namespace Lab12_Relational_DB.Model.Interfaces
         /// </summary>
         /// <param name="hotelroom">A unique hotelRoom object to update</param>
         /// <returns>An empty task object</returns>
-        Task Update(HotelRoom hotelroom);
+        Task Update(HotelRoomDTO hotelroomDto);
 
         /// <summary>
         /// Deletes a HotelRoom from the HotelRoom table in the database, 
@@ -40,7 +41,7 @@ namespace Lab12_Relational_DB.Model.Interfaces
         /// </summary>
         /// <param name="hotelId">The unique hotelId used to filter the table</param>
         /// <returns>A list of all hotelRooms with a specific hotelId</returns>
-        Task<List<HotelRoom>> GetHotelRooms(int hotelId);
+        Task<List<HotelRoomDTO>> GetHotelRooms(int hotelId);
 
         /// <summary>
         /// Returns a single HotelRoom from the HotelRoom database table,
@@ -49,7 +50,7 @@ namespace Lab12_Relational_DB.Model.Interfaces
         /// <param name="hotelId">The unique hotelId used to filter the table</param>
         /// <param name="roomNumber">The unique roomNumber used to filter the table</param>
         /// <returns>The single HotelRoom object</returns>
-        Task<HotelRoom> GetSingleHotelRoom(int hotelId, int roomNumber);
+        Task<HotelRoomDTO> GetSingleHotelRoom(int hotelId, int roomNumber);
 
     }
 }

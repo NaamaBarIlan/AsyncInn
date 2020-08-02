@@ -1,4 +1,5 @@
 ﻿using Lab12_Relational_DB.Data;
+using Lab12_Relational_DB.Model.DTOs;
 using Lab12_Relational_DB.Model.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using SQLitePCL;
@@ -12,10 +13,12 @@ namespace Lab12_Relational_DB.Model.Services
     public class RoomRepository : IRoom
     {
         private AsyncInnDbContext _context;
+        private IAmenity _amenity;
 
-        public RoomRepository(AsyncInnDbContext context)
+        public RoomRepository(AsyncInnDbContext context, IAmenity amenity)
         {
             _context = context;
+            _amenity = amenity;
         }
 
         /// <summary>
@@ -24,15 +27,22 @@ namespace Lab12_Relational_DB.Model.Services
         /// </summary>
         /// <param name="room">Unique identifier of the room</param>
         /// <returns>The created room object</returns>
-        public async Task<Room> Create(Room room)
+        public async Task<RoomDTO> Create(RoomDTO roomDto)
         {
+            Room room = new Room
+            {
+                Id = roomDto.ID,
+                Name = roomDto.Name,
+                Layout = roomDto.Layout,
+            };
+
             // when I have a room, I want to add them to the db:
             _context.Entry(room).State = EntityState.Added;
 
             // the room gets 'saved' here, and then associated with an id. 
             await _context.SaveChangesAsync();
 
-            return room;
+            return roomDto;
         }
 
         /// <summary>
@@ -43,7 +53,15 @@ namespace Lab12_Relational_DB.Model.Services
         /// <returns>Task of completion</returns>
         public async Task Delete(int id)
         {
-            Room room = await GetRoom(id);
+            RoomDTO roomDto = await GetRoom(id);
+
+            Room room = new Room
+            {
+                Id = roomDto.ID,
+                Name = roomDto.Name,
+                Layout = roomDto.Layout,
+
+            };
 
             _context.Entry(room).State = EntityState.Deleted;
             await _context.SaveChangesAsync();
@@ -55,14 +73,29 @@ namespace Lab12_Relational_DB.Model.Services
         /// </summary>
         /// <param name="id">Unique identifier of the room</param>
         /// <returns>A list of all RoomAmenities in the specific room</returns>
-        public async Task<Room> GetRoom(int id)
+        public async Task<RoomDTO> GetRoom(int id)
         {
             var room = await _context.Rooms.Where(r => r.Id == id)
                                            .Include(r => r.RoomAmenities)
                                            .ThenInclude(ra => ra.Amenity)
                                            .FirstOrDefaultAsync();
 
-            return room;
+            RoomDTO roomDto = new RoomDTO
+            {
+                ID = room.Id,
+                Name = room.Name,
+                Layout = room.Layout,
+
+            };
+
+            roomDto.Amenities = new List<AmenityDTO>();
+
+            foreach (var amenity in room.RoomAmenities)
+            {
+                roomDto.Amenities.Add(await _amenity.GetAmenity(amenity.AmenityId));
+            }
+
+            return roomDto;
         }
 
         /// <summary>
@@ -70,14 +103,20 @@ namespace Lab12_Relational_DB.Model.Services
         /// and all of the RoomAmenities associated with each room.
         /// </summary>
         /// <returns>A list of all the rooms and associated RoomAmenities</returns>
-        public async Task<List<Room>> GetRooms()
+        public async Task<List<RoomDTO>> GetRooms()
         {
             var rooms = await _context.Rooms.Include(r => r.RoomAmenities)
                                             .ThenInclude(ra => ra.Amenity)
                                             .ToListAsync();
 
+            List<RoomDTO> roomDTOs = new List<RoomDTO>();
+            foreach (var room in rooms)
+            {
 
-            return rooms;
+                roomDTOs.Add(await GetRoom(room.Id));
+            }
+
+            return roomDTOs;
         }
 
         /// <summary>
@@ -86,12 +125,19 @@ namespace Lab12_Relational_DB.Model.Services
         /// </summary>
         /// <param name="room">Unique identifier of the room</param>
         /// <returns>The updated room object</returns>
-        public async Task<Room> Update(Room room)
+        public async Task<RoomDTO> Update(RoomDTO roomDto)
         {
+            Room room = new Room
+            {
+                Id = roomDto.ID,
+                Name = roomDto.Name,
+                Layout = roomDto.Layout,
+            };
+
             _context.Entry(room).State = EntityState.Modified;
             await _context.SaveChangesAsync();
 
-            return room;
+            return roomDto;
         }
 
         /// <summary>

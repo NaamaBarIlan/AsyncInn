@@ -9,10 +9,12 @@ using Lab12_Relational_DB.Data;
 using Lab12_Relational_DB.Model;
 using Lab12_Relational_DB.Model.Interfaces;
 using Lab12_Relational_DB.Model.DTOs;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Lab12_Relational_DB.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize(Policy = "GoldPrivileges")]
     [ApiController]
     public class AmenitiesController : ControllerBase
     {

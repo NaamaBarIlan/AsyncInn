@@ -8,10 +8,12 @@ using Microsoft.EntityFrameworkCore;
 using Lab12_Relational_DB.Data;
 using Lab12_Relational_DB.Model;
 using Lab12_Relational_DB.Model.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Lab12_Relational_DB.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize(Policy = "GoldPrivileges")]
     [ApiController]
     public class HotelsController : ControllerBase
     {
@@ -24,6 +26,8 @@ namespace Lab12_Relational_DB.Controllers
 
         // GET: api/Hotels
         [HttpGet]
+        [AllowAnonymous]
+        //[Authorize(Policy = "DistrictManagerPrivileges")]
         public async Task<ActionResult<IEnumerable<Hotel>>> GetHotels()
         {
             
@@ -32,6 +36,7 @@ namespace Lab12_Relational_DB.Controllers
 
         // GET: api/Hotels/5
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<ActionResult<Hotel>> GetHotel(int id)
         {
             Hotel hotel = await _hotel.GetHotel(id);

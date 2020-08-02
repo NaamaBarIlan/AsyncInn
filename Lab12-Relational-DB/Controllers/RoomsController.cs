@@ -11,12 +11,12 @@ using Lab12_Relational_DB.Model.Interfaces;
 using System.Security.Cryptography.X509Certificates;
 using SQLitePCL;
 using Microsoft.AspNetCore.Authorization;
+using Lab12_Relational_DB.Model.DTOs;
 
 namespace Lab12_Relational_DB.Controllers
 {
     
     [Route("api/[controller]")]
-    [Authorize]
     [ApiController]
     public class RoomsController : ControllerBase
     {
@@ -29,32 +29,34 @@ namespace Lab12_Relational_DB.Controllers
 
         // GET: api/Rooms
         [HttpGet]
-        [AllowAnonymous]
-        public async Task<ActionResult<IEnumerable<Room>>> GetRooms()
+        [Authorize(Policy = "SilverPrivileges")]
+        public async Task<ActionResult<IEnumerable<RoomDTO>>> GetRooms()
         {
             return await _room.GetRooms();
         }
 
         // GET: api/Rooms/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Room>> GetRoom(int id)
+        [Authorize(Policy = "SilverPrivileges")]
+        public async Task<ActionResult<RoomDTO>> GetRoom(int id)
         {
-            Room room = await _room.GetRoom(id);
-            return room;
+            RoomDTO roomDto = await _room.GetRoom(id);
+            return roomDto;
         }
 
         // PUT: api/Rooms/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutRoom(int id, Room room)
+        [Authorize(Policy = "SilverPrivileges")]
+        public async Task<IActionResult> PutRoom(int id, RoomDTO roomDto)
         {
-            if (id != room.Id)
+            if (id != roomDto.ID)
             {
                 return BadRequest();
             }
 
-            var updatedRoom = await _room.Update(room);
+            var updatedRoom = await _room.Update(roomDto);
             return Ok(updatedRoom);
         }
 
@@ -62,14 +64,16 @@ namespace Lab12_Relational_DB.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<Room>> PostRoom(Room room)
+        [Authorize(Policy = "GoldPrivileges")]
+        public async Task<ActionResult<RoomDTO>> PostRoom(RoomDTO roomDto)
         {
-            await _room.Create(room);
+            await _room.Create(roomDto);
 
-            return CreatedAtAction("GetRoom", new { id = room.Id }, room);
+            return CreatedAtAction("GetRoom", new { id = roomDto.ID }, roomDto);
         }
 
         [HttpPost]
+        [Authorize(Policy = "BronzePrivileges")]
         [Route("{roomId}/Amenity/{AmenityId}")]
         //POST: {roomId}/Amenity/{AmenityId}
         // Model Binding
@@ -81,6 +85,7 @@ namespace Lab12_Relational_DB.Controllers
 
         // DELETE: api/Rooms/5
         [HttpDelete("{id}")]
+        [Authorize(Policy = "GoldPrivileges")]
         public async Task<ActionResult<Room>> DeleteRoom(int id)
         {
             await _room.Delete(id);
@@ -89,6 +94,7 @@ namespace Lab12_Relational_DB.Controllers
 
         // DELETE An Amenity from room
         [HttpDelete]
+        [Authorize(Policy = "BronzePrivileges")]
         [Route("{roomId}/Amenity/{amenityId}")]
         public async Task<IActionResult> RemoveAmenityFromRoom(int roomId, int amenityId)
         {
