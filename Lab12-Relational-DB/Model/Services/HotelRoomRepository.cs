@@ -142,7 +142,7 @@ namespace Lab12_Relational_DB.Model.Services
 
         /// <summary>
         /// Helper method that takes a hotelRoom  
-        /// and converts it into a hotelRoomDto entity.
+        /// and converts it into a hotelRoomDto.
         /// </summary>
         /// <param name="hotelRoom">A unique hotelRoom object</param>
         /// <returns>A hotelRoomDto object</returns>

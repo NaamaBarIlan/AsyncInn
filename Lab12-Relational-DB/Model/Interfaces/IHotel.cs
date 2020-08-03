@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Lab12_Relational_DB.Model.DTOs;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,7 +14,7 @@ namespace Lab12_Relational_DB.Model.Interfaces
         /// </summary>
         /// <param name="hotel">Unique identifier of the hotel</param>
         /// <returns>The created hotel object</returns>
-        Task<Hotel> Create(Hotel hotel);
+        Task<HotelDTO> Create(HotelDTO hotelDto);
 
         /// <summary>
         /// Returns a list of all of the hotels in the Hotels database table,
@@ -21,7 +22,7 @@ namespace Lab12_Relational_DB.Model.Interfaces
         /// </summary>
         /// <returns>A list of all hotels and all of the rooms, room amenities, 
         /// and amenities associated with each hotel.</returns>
-        Task<List<Hotel>> GetHotels();
+        Task<List<HotelDTO>> GetHotels();
 
         /// <summary>
         /// Returns the specified hotel and a list of all of the rooms, room amenities, and amenities 
@@ -30,7 +31,7 @@ namespace Lab12_Relational_DB.Model.Interfaces
         /// <param name="id">Unique identifier of the hotel</param>
         /// <returns>The specified hotel and a list of all of the associated 
         /// rooms, room amenities, and amenities</returns>
-        Task<Hotel> GetHotel(int id);
+        Task<HotelDTO> GetHotel(int id);
 
         /// <summary>
         /// Updates a specific hotel in the Hotels database table,

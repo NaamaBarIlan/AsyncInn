@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Lab12_Relational_DB.Model.DTOs
 {
-    public class Hotel
+    public class HotelDTO
     {
         public int ID { get; set; }
         public string Name { get; set; }
