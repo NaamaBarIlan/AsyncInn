@@ -30,15 +30,8 @@ namespace Lab12_Relational_DB.Model.Services
         public async Task<HotelRoomDTO> Create(HotelRoomDTO hotelroomDto, int hotelId)
         {
 
-            HotelRoom hotelRoom = new HotelRoom
-            {
-                HotelId = hotelroomDto.HotelID,
-                RoomId = hotelroomDto.RoomID,
-                RoomNumber = hotelroomDto.RoomNumber,
-                Rate = hotelroomDto.Rate,
-                PetFriendly = hotelroomDto.PetFriendly,
-            };
-            
+            HotelRoom hotelRoom = ConvertDTOIntoEntity(hotelroomDto);
+
             hotelRoom.HotelId = hotelId;
             _context.Entry(hotelRoom).State = EntityState.Added;
             await _context.SaveChangesAsync();
@@ -58,14 +51,7 @@ namespace Lab12_Relational_DB.Model.Services
 
             HotelRoomDTO hotelroomDto = await GetSingleHotelRoom(hotelId, roomNumber);
 
-            HotelRoom hotelRoom = new HotelRoom
-            {
-                HotelId = hotelroomDto.HotelID,
-                RoomId = hotelroomDto.RoomID,
-                RoomNumber = hotelroomDto.RoomNumber,
-                Rate = hotelroomDto.Rate,
-                PetFriendly = hotelroomDto.PetFriendly,
-            };
+            HotelRoom hotelRoom = ConvertDTOIntoEntity(hotelroomDto);
 
             _context.Entry(hotelRoom).State = EntityState.Deleted;
             await _context.SaveChangesAsync();
@@ -110,15 +96,9 @@ namespace Lab12_Relational_DB.Model.Services
                                                .FirstOrDefaultAsync();
 
 
-            HotelRoomDTO hotelRoomDto = new HotelRoomDTO
-            {
-                HotelID = hotelroom.HotelId,
-                RoomID = hotelroom.RoomId,
-                RoomNumber = hotelroom.RoomNumber,
-                Rate = hotelroom.Rate,
-                PetFriendly = hotelroom.PetFriendly,
-            };
+            HotelRoomDTO hotelRoomDto = ConvertEntityIntoDTO(hotelroom);
 
+            // Pulling in the RoomDTO data through the _room context and GetRoom method:
             hotelRoomDto.Room = await _room.GetRoom(hotelroom.RoomId);
 
             return hotelRoomDto;
@@ -133,6 +113,21 @@ namespace Lab12_Relational_DB.Model.Services
         public async Task Update(HotelRoomDTO hotelRoomDto)
         {
 
+            HotelRoom hotelRoom = ConvertDTOIntoEntity(hotelRoomDto);
+
+            _context.Entry(hotelRoom).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+        }
+
+        /// <summary>
+        /// Helper method that takes a hotelRoomDto 
+        /// and converts it into a hotelRoom entity.
+        /// </summary>
+        /// <param name="hotelRoomDto">A unique hotelRoomDto object</param>
+        /// <returns>A hotelRoom object</returns>
+        private HotelRoom ConvertDTOIntoEntity(HotelRoomDTO hotelRoomDto)
+        {
+
             HotelRoom hotelRoom = new HotelRoom
             {
                 HotelId = hotelRoomDto.HotelID,
@@ -142,8 +137,29 @@ namespace Lab12_Relational_DB.Model.Services
                 PetFriendly = hotelRoomDto.PetFriendly,
             };
 
-            _context.Entry(hotelRoom).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
+            return hotelRoom;
         }
+
+        /// <summary>
+        /// Helper method that takes a hotelRoom  
+        /// and converts it into a hotelRoomDto entity.
+        /// </summary>
+        /// <param name="hotelRoom">A unique hotelRoom object</param>
+        /// <returns>A hotelRoomDto object</returns>
+        private HotelRoomDTO ConvertEntityIntoDTO(HotelRoom hotelRoom)
+        {
+
+            HotelRoomDTO hotelRoomDto = new HotelRoomDTO
+            {
+                HotelID = hotelRoom.HotelId,
+                RoomID = hotelRoom.RoomId,
+                RoomNumber = hotelRoom.RoomNumber,
+                Rate = hotelRoom.Rate,
+                PetFriendly = hotelRoom.PetFriendly,
+            };
+
+            return hotelRoomDto;
+        }
+
     }
 }
