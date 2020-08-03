@@ -98,8 +98,24 @@ This added level of abstraction created loosely coupled components, and ensures 
 
 * Identity is typically configured using a SQL Server database to store user names, passwords, and profile data. Alternatively, another persistent store can be used, for example, Azure Table Storage.
 
+### User Roles & Permissions
+
+1. District Manager 
+      * Authorization Policy type: GoldPrivileges.
+      * Can do full CRUD operations on all Hotel, HotelRoom, Room and Amenity entities.
+      * Can create new user accounts for all other roles.
+2. Property Manager
+      * Authorization Policy type: SilverPrivileges.
+      * Can Create, Update and Read new HotelRooms to Hotels and Amenities to Rooms. 
+      * Can create new user accounts for Agents
+3. Agent
+      * Authorization Policy type: BronzePrivileges.
+      * Can Read and Update a HotelRoom, and Create and Delete Amenities to Room
+     
 
 ### Change Log
+
+1.8 *Added user role tests* - 2 Aug 2020
 
 1.7 *Edited the summary comments of the interfaces and repositories* - 30 Jul 2020
 
