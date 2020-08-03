@@ -21,17 +21,10 @@ namespace XUnitTest_AsyncInn
         {
             // Arrange
 
-
-            var amenity = new Amenity
-            {
-                Id = 22,
-                Name = "TV"
-            };
-
             var amenityDto = new AmenityDTO
             {
-                ID = amenity.Id,
-                Name = amenity.Name
+                ID = 22,
+                Name = "TV"
             };
 
             var repository = BuildRepository();
@@ -44,7 +37,7 @@ namespace XUnitTest_AsyncInn
             Assert.NotNull(saved);
             Assert.NotEqual(0, amenityDto.ID);
             Assert.Equal(saved.ID, amenityDto.ID);
-            Assert.Equal(amenity.Name, saved.Name);
+            Assert.Equal(amenityDto.Name, saved.Name);
         }
 
         [Fact]
@@ -52,28 +45,16 @@ namespace XUnitTest_AsyncInn
         {
             // Arrange
 
-            Amenity firstAmenity = new Amenity
-            {
-                Id = 11,
-                Name = "TV"
-            };
-
             AmenityDTO firstAmenityDto = new AmenityDTO
             {
-                ID = firstAmenity.Id,
-                Name = firstAmenity.Name
-            };
-
-            Amenity secondAmenity = new Amenity
-            {
-                Id = 12,
-                Name = "AC"
+                ID = 11,
+                Name = "TV"
             };
 
             AmenityDTO secondAmenityDto = new AmenityDTO
             {
-                ID = secondAmenity.Id,
-                Name = secondAmenity.Name
+                ID = 12,
+                Name = "AC"
             };
 
             var repository = BuildRepository();
@@ -97,28 +78,16 @@ namespace XUnitTest_AsyncInn
         {
             // Arrange
 
-            Amenity firstAmenity = new Amenity
-            {
-                Id = 11,
-                Name = "TV"
-            };
-
             AmenityDTO firstAmenityDto = new AmenityDTO
             {
-                ID = firstAmenity.Id,
-                Name = firstAmenity.Name
-            };
-
-            Amenity secondAmenity = new Amenity
-            {
-                Id = 12,
-                Name = "AC"
+                ID = 11,
+                Name = "TV"
             };
 
             AmenityDTO secondAmenityDto = new AmenityDTO
             {
-                ID = secondAmenity.Id,
-                Name = secondAmenity.Name
+                ID = 12,
+                Name = "AC"
             };
 
             var repositoryAll = BuildRepository();
@@ -139,86 +108,63 @@ namespace XUnitTest_AsyncInn
         [Fact]
         public async Task CanDeleteAnAmenity()
         {
-            Amenity firstAmenity = new Amenity
-            {
-                Id = 11,
-                Name = "TV"
-            };
-
             AmenityDTO firstAmenityDto = new AmenityDTO
             {
-                ID = firstAmenity.Id,
-                Name = firstAmenity.Name
-            };
-
-            Amenity secondAmenity = new Amenity
-            {
-                Id = 12,
-                Name = "AC"
+                ID = 11,
+                Name = "Banana"
             };
 
             AmenityDTO secondAmenityDto = new AmenityDTO
             {
-                ID = secondAmenity.Id,
-                Name = secondAmenity.Name
+                ID = 12,
+                Name = "Lemon"
             };
 
-            var repositoryAll = BuildRepository();
+            AmenityDTO thirdAmenityDto = new AmenityDTO
+            {
+                ID = 13,
+                Name = "Mango"
+            };
 
-            AmenityDTO saved1 = await repositoryAll.Create(firstAmenityDto);
-            AmenityDTO saved2 = await repositoryAll.Create(secondAmenityDto);
+            var repository = BuildRepository();
+
+            AmenityDTO saved1 = await repository.Create(firstAmenityDto);
+            AmenityDTO saved2 = await repository.Create(secondAmenityDto);
+            AmenityDTO saved3 = await repository.Create(thirdAmenityDto);
 
             // Act
 
-            await repositoryAll.Delete(1);
-            List<AmenityDTO> result = await repositoryAll.GetAmenities();
-
+            List<AmenityDTO> resultBefore = await repository.GetAmenities();
+            await repository.Delete(11);
+            List<AmenityDTO> resultAfter = await repository.GetAmenities();
 
             // Assert
 
-            Assert.Equal(4, result.Count);
+            Assert.Equal(5, resultAfter.Count);
         }
 
-        //[Fact]
-        //public async Task CanUpdateAnAmenity()
-        //{
-        //    // Arrange
+        [Fact]
+        public async Task CanUpdateAnAmenity()
+        {
+            // Arrange
 
-        //    Amenity firstAmenity = new Amenity
-        //    {
-        //        Id = 11,
-        //        Name = "TV"
-        //    };
+            AmenityDTO amenityDto = new AmenityDTO
+            {
+                ID = 1,
+                Name = "mango"
+            };
 
-        //    AmenityDTO firstAmenityDto = new AmenityDTO
-        //    {
-        //        ID = firstAmenity.Id,
-        //        Name = firstAmenity.Name
-        //    };
+            var repository = BuildRepository();
 
-        //    Amenity secondAmenity = new Amenity
-        //    {
-        //        Id = 12,
-        //        Name = "AC"
-        //    };
+            // Act
 
-        //    AmenityDTO secondAmenityDto = new AmenityDTO
-        //    {
-        //        ID = secondAmenity.Id,
-        //        Name = secondAmenity.Name
-        //    };
+            await repository.Update(amenityDto);
 
-        //    var repository = BuildRepository();
+            AmenityDTO result = await repository.GetAmenity(1);
+            List<AmenityDTO> getAllAmenities = await repository.GetAmenities();
 
-        //    // Act
-        //    AmenityDTO saved = await repository.Create(firstAmenityDto);
-
-        //    await repository.Update(secondAmenityDto);
-
-        //    var result = await repository.GetAmenity(1);
-
-        //    // Assert
-        //    Assert.Equal("AC", result.Name);
-        //}
+            // Assert
+            Assert.Equal("mango", result.Name);
+        }
     }
 }

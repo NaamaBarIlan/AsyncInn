@@ -12,10 +12,12 @@ namespace Lab12_Relational_DB.Model.Services
     public class HotelRoomRepository : IHotelRoom
     {
         private AsyncInnDbContext _context;
+        private IRoom _room;
 
-        public HotelRoomRepository(AsyncInnDbContext context)
+        public HotelRoomRepository(AsyncInnDbContext context, IRoom room)
         {
             _context = context;
+            _room = room;
         }
 
         /// <summary>
@@ -65,8 +67,6 @@ namespace Lab12_Relational_DB.Model.Services
                 PetFriendly = hotelroomDto.PetFriendly,
             };
 
-
-            var hotelRoom = await GetSingleHotelRoom(roomNumber, hotelId);
             _context.Entry(hotelRoom).State = EntityState.Deleted;
             await _context.SaveChangesAsync();
         }
@@ -79,11 +79,17 @@ namespace Lab12_Relational_DB.Model.Services
         /// <returns>A list of all hotelRooms with a specific hotelId</returns>
         public async Task<List<HotelRoomDTO>> GetHotelRooms(int hotelId)
         {
-            List<HotelRoom> hotelRooms = await _context.HotelRoom.Where(x => x.HotelId == hotelId)
+            var hotelRooms = await _context.HotelRoom.Where(x => x.HotelId == hotelId)
                                                                   .Include(x => x.Room)
                                                                   .ToListAsync();
 
-            return hotelRooms;
+            List<HotelRoomDTO> hotelRoomDTOs = new List<HotelRoomDTO>();
+            foreach (var item in hotelRooms)
+            {
+                hotelRoomDTOs.Add(await GetSingleHotelRoom(item.HotelId, item.RoomNumber));
+            }
+
+            return hotelRoomDTOs;
         }
 
         /// <summary>
@@ -96,14 +102,26 @@ namespace Lab12_Relational_DB.Model.Services
         public async Task<HotelRoomDTO> GetSingleHotelRoom(int hotelId, int roomNumber)
         {
             // Add LINQ
-            var room = await _context.HotelRoom.Where(x => x.HotelId == hotelId && x.RoomNumber == roomNumber)
+            var hotelroom = await _context.HotelRoom.Where(x => x.HotelId == hotelId && x.RoomNumber == roomNumber)
                                                .Include(x => x.Hotel)
                                                .Include(x => x.Room)
                                                .ThenInclude(x => x.RoomAmenities)
                                                .ThenInclude(x => x.Amenity)
                                                .FirstOrDefaultAsync();
 
-            return roomDto;
+
+            HotelRoomDTO hotelRoomDto = new HotelRoomDTO
+            {
+                HotelID = hotelroom.HotelId,
+                RoomID = hotelroom.RoomId,
+                RoomNumber = hotelroom.RoomNumber,
+                Rate = hotelroom.Rate,
+                PetFriendly = hotelroom.PetFriendly,
+            };
+
+            hotelRoomDto.Room = await _room.GetRoom(hotelroom.RoomId);
+
+            return hotelRoomDto;
         }
 
         /// <summary>
@@ -112,11 +130,20 @@ namespace Lab12_Relational_DB.Model.Services
         /// </summary>
         /// <param name="hotelroom">A unique hotelRoom object to update</param>
         /// <returns>An empty task object</returns>
-        public async Task Update(HotelRoom hotelroom)
+        public async Task Update(HotelRoomDTO hotelRoomDto)
         {
-            _context.Entry(hotelroom).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
 
+            HotelRoom hotelRoom = new HotelRoom
+            {
+                HotelId = hotelRoomDto.HotelID,
+                RoomId = hotelRoomDto.RoomID,
+                RoomNumber = hotelRoomDto.RoomNumber,
+                Rate = hotelRoomDto.Rate,
+                PetFriendly = hotelRoomDto.PetFriendly,
+            };
+
+            _context.Entry(hotelRoom).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
         }
     }
 }
