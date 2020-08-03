@@ -9,6 +9,7 @@ using Lab12_Relational_DB.Data;
 using Lab12_Relational_DB.Model;
 using Lab12_Relational_DB.Model.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using Lab12_Relational_DB.Model.DTOs;
 
 namespace Lab12_Relational_DB.Controllers
 {
@@ -28,7 +29,7 @@ namespace Lab12_Relational_DB.Controllers
         [HttpGet]
         [AllowAnonymous]
         //[Authorize(Policy = "DistrictManagerPrivileges")]
-        public async Task<ActionResult<IEnumerable<Hotel>>> GetHotels()
+        public async Task<ActionResult<IEnumerable<HotelDTO>>> GetHotels()
         {
             
             return await _hotel.GetHotels();
@@ -37,10 +38,10 @@ namespace Lab12_Relational_DB.Controllers
         // GET: api/Hotels/5
         [HttpGet("{id}")]
         [AllowAnonymous]
-        public async Task<ActionResult<Hotel>> GetHotel(int id)
+        public async Task<ActionResult<HotelDTO>> GetHotel(int id)
         {
-            Hotel hotel = await _hotel.GetHotel(id);
-            return hotel;
+            HotelDTO hotelDto = await _hotel.GetHotel(id);
+            return hotelDto;
         }
 
         // PUT: api/Hotels/5
@@ -62,11 +63,11 @@ namespace Lab12_Relational_DB.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<Hotel>> PostHotel(Hotel hotel)
+        public async Task<ActionResult<HotelDTO>> PostHotel(HotelDTO hotelDto)
         {
-            await _hotel.Create(hotel);
+            await _hotel.Create(hotelDto);
 
-            return CreatedAtAction("GetHotel", new { id = hotel.Id }, hotel);
+            return CreatedAtAction("GetHotel", new { id = hotelDto.ID }, hotelDto);
         }
 
         // DELETE: api/Hotels/5
